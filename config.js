@@ -5,9 +5,9 @@ const config = {
 		"gaTrackingId": null
 	},
 	"header": {
-		"logo": "https://graphql-engine-cdn.hasura.io/learn-hasura/assets/homepage/favicon.png",
-		"logoLink": "https://learn.hasura.io",
-		"title": "Gatsby Gitbook Boilerplate",
+		"logo": "https://www.on-it.no/wp-content/themes/on-it/style/images/on_it_logo.png",
+		"logoLink": "https://zpider.io",
+		"title": "Zpider eShop Help",
 		"githubUrl": "https://github.com/hasura/gatsby-gitbook-boilerplate",
 		"helpUrl": "",
 		"tweetText": "",
@@ -21,13 +21,13 @@ const config = {
     		"/codeblock"
 		],
 		"links": [
-			{ "text": "Hasura", "link": "https://hasura.io"},
+			{ "text": "zpider.io", "link": "https://zpider.io"},
 		],
 		"frontline": false,
 		"ignoreIndex": true,
 	},
 	"siteMetadata": {
-		"title": "Gatsby Gitbook Boilerplate | Hasura",
+		"title": "Zpider eShop Help | ON IT",
 		"description": "Documentation built with mdx. Powering learn.hasura.io ",
 		"ogImage": null,
 		"docsLocation": "https://github.com/hasura/gatsby-gitbook-boilerplate/tree/master/content",

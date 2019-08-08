@@ -31,7 +31,6 @@ const Header = ({location}) => (
         `}
     render={(data) => {
       const logoImg = require('./images/logo.svg');
-      const twitter = require('./images/twitter.svg');
       const {
         site: {
           siteMetadata: {
@@ -70,23 +69,11 @@ const Header = ({location}) => (
                 <hr/>
               </div>
                 <ul className={'nav navbar-nav navBarUL'}>
-                  {githubUrl !== '' ?
-                    (<li className={'githubBtn'}>
-                      <GitHubButton href={githubUrl} data-show-count="true" aria-label="Star on GitHub">Star</GitHubButton>
-                    </li>) : null}
                   {helpUrl !== '' ? 
                     (<li><a href={helpUrl}>Need Help?</a></li>) : null
                   }
                 </ul>
-              }
               <ul className={'nav navbar-nav navBarUL navbar-right'}>
-                {tweetText !== '' ? 
-                  (<li>
-                    <a href={'https://twitter.com/intent/tweet?&text=' + tweetText} target="_blank">
-                      <img className={'twitterIcon'} src={twitter} alt={'Twitter'} />
-                    </a>
-                   </li>) : null
-                }
                 {headerLinks.map((link, key) => {
                   if(link.link !== '' && link.text !== '') {
                     return(
