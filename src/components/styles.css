@@ -618,6 +618,10 @@ img {
     margin-top: 15px;
   }
 
+  .navbar-default .navbar-toggle:hover .icon-bar {
+    background-color: #7CAA8A !important;
+  }
+
   .navBarBrand {
     font-size: 20px;
     padding: 15px
