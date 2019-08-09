@@ -6,8 +6,8 @@ const config = {
 	},
 	"header": {
 		"logo": "https://www.on-it.no/wp-content/themes/on-it/style/images/on_it_logo.png",
-		"logoLink": "https://zpider.io",
-		"title": "Zpider eShop",
+		"logoLink": "/",
+		"title": "Zpider eShop Docs",
 		"githubUrl": "https://github.com/omelhus/zpider-docs",
 		"helpUrl": "",
 		"tweetText": "",
@@ -17,8 +17,7 @@ const config = {
 	},
 	"sidebar": {
 		"forcedNavOrder": [
-			"/introduction",
-    		"/codeblock"
+			"/introduction"
 		],
 		"links": [
 			{ "text": "zpider.io", "link": "https://zpider.io"},
