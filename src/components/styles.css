@@ -96,10 +96,10 @@ body {
   border: 0;
   display: flex;
   align-items: center;
-  box-shadow: -1px 0px 4px 1px rgba(175, 158, 232, .4);
-  -webkit-box-shadow: -1px 0px 4px 1px rgba(175, 158, 232, .4);
-  -moz-box-shadow: -1px 0px 4px 1px rgba(175, 158, 232, .8);
-  -o-box-shadow: -1px 0px 4px 1px rgba(175, 158, 232, .4);
+  box-shadow: -1px 0px 4px 1px rgba(124, 170, 138, .4);
+  -webkit-box-shadow: -1px 0px 4px 1px rgba(124, 170, 138, .4);
+  -moz-box-shadow: -1px 0px 4px 1px rgba(124, 170, 138, .8);
+  -o-box-shadow: -1px 0px 4px 1px rgba(124, 170, 138, .4);
   z-index: 1;
   padding: 15px;
 }
@@ -337,7 +337,7 @@ pre {
   font-size: 32px;
   line-height: 1.5;
   font-weight: 500;
-  border-left: 2px solid rgb(116, 76, 188);
+  border-left: 2px solid rgb(124, 170, 138);
   padding: 0 16px;
   flex: 1;
   margin-top: 0;
