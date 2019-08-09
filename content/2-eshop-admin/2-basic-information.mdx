@@ -1,0 +1,43 @@
+---
+title: "Basic information wizard"
+metaTitle: "Basic information wizard"
+metaDescription: ""
+---
+
+In the Basic configuration wizard you can configure some of the basics of the eShop. This includes the type of eShop (Business to business, business to consumer or both), languages and e-mail settings.
+
+The Basic configuration wizard consists of the following steps:
+
+### Login mode
+
+The login mode decides how the eShop users will log in to the eShop:
+
+- Business 2 Business: The user must log on with a username and a password to access the eShop.
+- Business 2 Consumer: No login is necessary to get access to the eShop. The user will be logged in automatically as a guest user defined in Web user guest. The prices, elements and design displayed in the eShop will be based on the guest user.
+- Both: The user must log on as for Business 2 Business mode but there will also be a link for guest users. By clicking this link the user will be logged in automatically as for a Business to consumer eShop.
+
+### Open WebShop
+
+The Open WebShop parameter decides the shopping rights for the guest user:
+
+If the Open WebShop parameter is on the guest user will be able to view products and price and put products in the shopping cart. When proceeding to the checkout the user must log in with a valid eShop user to be able to complete the order.
+
+If the Open WebShop parameter is turned off the guest user will be able to view products and prices but not be able to put any products in the shopping cart. To be able to buy products and put them in the shopping cart the guest user must log in with a valid eShop user.
+
+### Create User as Customer
+
+If this parameter is turned on the new eShop users who register from the eShop will be created as customers instead of contact persons in the ERP system.
+
+### Guest Web User
+
+Select the user which will be the default user when logging in to a Business to consumer eShop or logging in as a guest. The guest web user must be a customer in the ERP system and have an import profile = 99.
+
+### New User Template
+
+This user will be used as a template for new customers registering in the eShop. The new users will inherit information from this user. The users selectable as user template must be a customer in the ERP system and have an import profile = 99.
+
+### New User Import Profile
+
+Select the import profile which will be set for new users registering in the eShop. Read the Import profiles general concepts help for more information about import profiles.
+
+To make the changes done in the Basic configuration wizard available to the eShop users you must click the Commit changes link in eShop admin.

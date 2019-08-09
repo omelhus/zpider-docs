@@ -17,7 +17,8 @@ const config = {
 	},
 	"sidebar": {
 		"forcedNavOrder": [
-			"/introduction"
+			"/introduction",
+			"/eshop-admin"
 		],
 		"links": [
 			{ "text": "zpider.io", "link": "https://zpider.io"},
