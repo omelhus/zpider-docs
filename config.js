@@ -1,14 +1,14 @@
 const config = {
 	"gatsby": {
 		"pathPrefix": "/",
-		"siteUrl": "https://learn.hasura.io",
+		"siteUrl": "https://docs.zpider.io",
 		"gaTrackingId": null
 	},
 	"header": {
 		"logo": "https://www.on-it.no/wp-content/themes/on-it/style/images/on_it_logo.png",
 		"logoLink": "https://zpider.io",
-		"title": "Zpider eShop Help",
-		"githubUrl": "https://github.com/hasura/gatsby-gitbook-boilerplate",
+		"title": "Zpider eShop",
+		"githubUrl": "https://github.com/omelhus/zpider-docs",
 		"helpUrl": "",
 		"tweetText": "",
 		"links": [
@@ -30,8 +30,8 @@ const config = {
 		"title": "Zpider eShop Help | ON IT",
 		"description": "Documentation built with mdx. Powering learn.hasura.io ",
 		"ogImage": null,
-		"docsLocation": "https://github.com/hasura/gatsby-gitbook-boilerplate/tree/master/content",
-		"favicon": "https://graphql-engine-cdn.hasura.io/img/hasura_icon_black.svg"
+		"docsLocation": "https://github.com/omelhus/zpider-docs/tree/master/content",
+		"favicon": "https://www.on-it.no/wp-content/themes/on-it/favicon.ico"
 	},
 };
 
