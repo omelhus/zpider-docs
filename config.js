@@ -17,8 +17,6 @@ const config = {
 	},
 	"sidebar": {
 		"forcedNavOrder": [
-			"/introduction",
-			"/eshop-admin"
 		],
 		"links": [
 			{ "text": "zpider.io", "link": "https://zpider.io"},
@@ -27,8 +25,8 @@ const config = {
 		"ignoreIndex": true,
 	},
 	"siteMetadata": {
-		"title": "Zpider eShop Help | ON IT",
-		"description": "Documentation built with mdx. Powering learn.hasura.io ",
+		"title": "Zpider eShop Documentation",
+		"description": "Zpider eShop Documentation",
 		"ogImage": null,
 		"docsLocation": "https://github.com/omelhus/zpider-docs/tree/master/content",
 		"favicon": "https://www.on-it.no/wp-content/themes/on-it/favicon.ico"
