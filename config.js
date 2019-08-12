@@ -8,7 +8,7 @@ const config = {
 		"logo": "https://www.on-it.no/wp-content/themes/on-it/style/images/on_it_logo.png",
 		"logoLink": "/",
 		"title": "Zpider eShop Docs",
-		"githubUrl": "https://github.com/omelhus/zpider-docs",
+		"githubUrl": "https://github.com/ON-IT/Zpider-Docs",
 		"helpUrl": "",
 		"tweetText": "",
 		"links": [
@@ -19,7 +19,9 @@ const config = {
 		"forcedNavOrder": [
 		],
 		"links": [
-			{ "text": "zpider.io", "link": "https://zpider.io"},
+			{ "text": "Zpider eShop", "link": "https://zpider.io"},
+			{ "text": "ON IT AS", "link": "https://on-it.no"},
+			{ "text": "Visma", "link": "https://visma.com"}
 		],
 		"frontline": false,
 		"ignoreIndex": true,
@@ -28,7 +30,7 @@ const config = {
 		"title": "Zpider eShop Documentation",
 		"description": "Zpider eShop Documentation",
 		"ogImage": null,
-		"docsLocation": "https://github.com/omelhus/zpider-docs/tree/master/content",
+		"docsLocation": "https://github.com/ON-IT/Zpider-Docs/tree/master/content",
 		"favicon": "https://www.on-it.no/wp-content/themes/on-it/favicon.ico"
 	},
 };
