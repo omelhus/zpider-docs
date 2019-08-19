@@ -21,7 +21,8 @@ const config = {
 		],
 		"links": [
 			{ "text": "Zpider eShop", "link": "https://zpider.io"},
-			{ "text": "ON IT", "link": "https://zpider.io"},
+			{ "text": "Zpider Community", "link": "https://spectrum.chat/zpider"},
+			{ "text": "ON IT", "link": "https://on-it.no"},
 			{ "text": "Visma", "link": "https://visma.com"}
 		],
 		"frontline": false,
