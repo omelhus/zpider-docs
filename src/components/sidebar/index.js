@@ -125,7 +125,7 @@ const SidebarLayout = ({location}) => (
             {config.sidebar.links.map((link, key) => {
               if (link.link !== '' && link.text !== '') {
                 return (
-                  <ListItem key={key} to={link.link}>
+                  <ListItem key={key} to={link.link} target="_blank">
                     {link.text}
                     <ExternalLink size={14} />
                   </ListItem>
