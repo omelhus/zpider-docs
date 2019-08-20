@@ -55,11 +55,19 @@ const calculateTreeData = edges => {
     prevItems.map((item) => {
       item.items = item.items
         .sort(function (a, b) {
-          if (a.label < b.label)
-            return -1;
-          if (a.label > b.label)
-            return 1;
-          return 0;
+          if(a.url.startsWith("/99-")){
+            if (a.url < b.url)
+              return 1;
+            if (a.url > b.url)
+              return -1;
+            return 0;
+          } else {
+            if (a.url < b.url)
+              return -1;
+            if (a.url > b.url)
+              return 1;
+            return 0;
+          }
         });
     })
     const index = prevItems.findIndex(({label}) => label === parts[parts.length - 1]);

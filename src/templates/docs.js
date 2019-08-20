@@ -102,6 +102,25 @@ export default class MDXRuntimeTest extends Component {
         { items: [] }
       );
 
+      navItems.items.sort(function (a, b) {
+        if(a && b){
+          if(a.startsWith("/99-releasenotes/") && b.startsWith('/99-releasenotes/')){
+            if (a < b)
+              return 1;
+            if (a > b)
+              return -1;
+            return 0;
+          } else {
+            if (a < b)
+              return -1;
+            if (a > b)
+              return 1;
+            return 0;
+          }
+        }
+        return 0;
+      });
+    
     const nav = forcedNavOrder
       .reduce((acc, cur) => {
         return acc.concat(navItems[cur]);
@@ -116,7 +135,7 @@ export default class MDXRuntimeTest extends Component {
           return { title: node.fields.title, url: node.fields.slug };
         }
       });
-
+            
     // meta tags
     const metaTitle = mdx.frontmatter.metaTitle;
     const metaDescription = mdx.frontmatter.metaDescription;

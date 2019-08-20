@@ -102,7 +102,7 @@ const SidebarLayout = ({location}) => (
   <StaticQuery
     query={graphql`
       query {
-        allMdx {
+        allMdx(sort: {order: ASC, fields: [fields___slug]}) {
           edges {
             node {
               fields {
