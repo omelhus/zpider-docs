@@ -5,7 +5,6 @@ metaDescription: "These are release notes for v11.0 of Zpider eShop"
 ---
 
 ## Description
-## Description
 
 - Rebranded as Zpider eShop
 - Moved documentation to https://docs.zpider.io
@@ -21,30 +20,26 @@ There's a couple of DLLs that has been renamed. If you find any reference to Vis
 
 **Before**
 
-`xml
+```xml
 <add verb="*" path="*/psp/bbs/request.aspx" type="Visma.Payment.Terminal.Psp.Bbs.RequestHandler, Payment.Terminal.Base" />
 <add verb="*" path="*/psp/bbs/response.aspx" type="Visma.Payment.Terminal.Psp.Bbs.ResponseHandler, Payment.Terminal.Base" />
 <add verb="*" path="*/psp/posten/echo.aspx" type="Visma.Payment.Terminal.Psp.Posten.CancelHandler, Payment.Terminal.Base" />
 <add verb="*" path="*/psp/posten/cancel.aspx" type="Visma.Payment.Terminal.Psp.Posten.CancelHandler, Payment.Terminal.Base" />
 <add verb="*" path="*/psp/posten/request.aspx" type="Visma.Payment.Terminal.Psp.Posten.RequestHandler, Payment.Terminal.Base" />
 <add verb="*" path="*/psp/posten/response.aspx" type="Visma.Payment.Terminal.Psp.Posten.ResponseHandler, Payment.Terminal.Base" />
-
+```
 
 **Now**
 
-`xml
+```xml
 <add verb="*" path="*/psp/bbs/request.aspx" type="Zpider.Payment.Terminal.Psp.Bbs.RequestHandler, Payment.Terminal.Base" />
 <add verb="*" path="*/psp/bbs/response.aspx" type="Zpider.Payment.Terminal.Psp.Bbs.ResponseHandler, Payment.Terminal.Base" />
 <add verb="*" path="*/psp/posten/echo.aspx" type="Zpider.Payment.Terminal.Psp.Posten.CancelHandler, Payment.Terminal.Base" />
 <add verb="*" path="*/psp/posten/cancel.aspx" type="Zpider.Payment.Terminal.Psp.Posten.CancelHandler, Payment.Terminal.Base" />
 <add verb="*" path="*/psp/posten/request.aspx" type="Zpider.Payment.Terminal.Psp.Posten.RequestHandler, Payment.Terminal.Base" />
 <add verb="*" path="*/psp/posten/response.aspx" type="Zpider.Payment.Terminal.Psp.Posten.ResponseHandler, Payment.Terminal.Base" />
-
-
-## Work items
-| Task | Remove Visma from htx templates |
+```
 
 ## Download
 
-[Zpider eShop v11.0](https://download.zpider.io/release/Zpider-v11.0.zip)
-
+Pending pilot testing
