@@ -1,6 +1,6 @@
 import * as React from "react";
 import Highlight, { defaultProps } from "prism-react-renderer";
-import prismTheme from "prism-react-renderer/themes/vsDark";
+import prismTheme from "prism-react-renderer/themes/github";
 import { LiveProvider, LiveEditor, LiveError, LivePreview } from "react-live";
 import '../styles.css';
 
@@ -34,7 +34,8 @@ const CodeBlock = ({ children: exampleCode, ...props }) => {
       <Highlight
         {...defaultProps}
         code={exampleCode}
-        language="javascript"
+        language="html"
+        theme={prismTheme}
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <Pre className={className} style={style} p={3}>
