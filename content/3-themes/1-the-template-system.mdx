@@ -1,0 +1,711 @@
+---
+title: "Templates (HTX)"
+metaTitle: "Templates (HTX)"
+metaDescription: "How themes and templates in Zpider works"
+---
+
+The Template system controls all display and presentation of data. The templates together with the configuration data (System Manager) controls what data is displayed and the format of that data. The template system allows a high degree of flexibility, but also a high degree of responsibility. The flexibility gives you the possibility to do almost everything with the template system, but at the cost of complexity and costly upgrades. All the possibilites of the template system should be used with care.
+
+## General Syntax
+
+A HTML Template is an HTML file containing:
+
+    * Zpider Tags
+    * Zpider if-tags
+    * Zpider Entities
+    * Comments
+
+A template is processed on the server side. The result of this processing is an html file which is returned to the client (response). The strategy is that all display of data to the client is done by the template system. The templates are first parsed and a parsed version of the template is used for processing. Once the template has been parsed, the parsed version will be used lateer. This enables quick processing of the templates.
+
+### Zpider tags
+
+The main purpose of the zpider tags is to select the data to be display, control repetions, including new templates, and so on, although there are tags that actually writes data as the text and write tags.
+
+There are two kinds of zpider tags:
+
+    Non-repeating
+    Repeating
+
+A Non-repeating tag does not have a closing tag and is on the format:
+
+```html
+<z:tag name="value" name="value" ...> </z:tag>
+```
+
+name=value defines a property for tag. Any number of properties may be defined for each tag.
+
+A Repeating tag does have a closing tag and is on the format:
+
+```html
+<z:tag name="value" name="value" ...>
+  ....tag body...
+</z:tag>
+```
+
+The tag body of a repeating tag will be executed the number of repetitions defined by the repeating tag. A webattributes tag will repeate for each webattribute. A loop tag will repeate the number of times defined in the start, until and step properties.
+
+## Zpider Entities
+
+The main purpose of the entity is to write data to the response html. The entity has the general syntax:
+
+    $z:name[left.right]
+    $z:name[specifyer]
+
+Where left.right is used, the left part typically refers to an object (an alias or name for a stored object), and the right part refers to a keyword or field within that object. To illustrate left and right, an entity could look like this: $z:value[article.price], here value is the name of the entity, article is the left part of the specifyer, which is an alias for a dataclass. Price is the right part of the specifyer which is a value from the article dataclass. Where just specifyer is used, it normally refers to an object.
+
+The html-template may contain comments. The comments starts with: ##, as in this example:
+
+```html
+<td class="$z:value[attribute.contentstyle]" colspan="99" align="left">
+  ## ------------------------- ## Attribute type (1) TEXT ##
+  -------------------------
+</td>
+```
+
+Everything right of ## is ignored when the template is parsed. Comments may be on a line by itself, or to the right of code.
+
+## Dataclasses
+
+All data retrieved from Zpider or the ERP system must be retrieved from Dataclasses. Dataclasses are created in the templates using the prepare tag. A dataclass is either a collection of datarows (a table), or a tree structure containing tree nodes. You may iterate a dataset using the foreach tag. Individual dataelements, or columns, are retrieved using entities.
+
+List of available dataclasses:
+
+    maingroup A tree dataclass of Product Groups; fetched from Zpider
+    menu A tree dataclass of a menu; fetched from Zpider
+    article Collection of products; fetched from the ERP system
+    support Contains some global data like the stylesheet; fetched from Zpider
+    quickorder Contains quickorders; fetched from Zpider
+    webuser Contains webuser data; fetched from Zpider
+    document Contains documents; fetched from Zpider
+    order Contains orders; fetched from ERP system
+    orderline Contains orderlines; fetched from ERP system
+    customer Contains customer info; fetched from ERP system (Actor in Business; Customer in Global)
+    zpiderorder Contains orders from Zpider
+    zpiderorderline Contains orderlines from Zpider
+    freight Contains freight information; fetched from Zpider
+    creditcard Credit Card info, communicates with the Payment Server; fetched from Zpider
+    clientadministrator Configuration data for the client; fetched from Zpider
+    shoppingcart Shoppingcart data; fetched from Zpider
+
+## Scope
+
+Dataclasses and attributes are stored in one of three storage areas, called Scope:
+
+| Scope        | Description    |
+| ------------- |:-------------:|
+| page | Survives the processing of a page, which currently is the same as request. |
+| request | All data received from the client is placed here. All data placed here survives the current request. |
+| session | Data placed here exists between requests and lives until the user logs off or the session times out. |
+
+The default scope is page. Where a scope property may be defined, and is omitted, page is automatically selected. A data element (attribute or dataclass) may only exists in one of the scopes. This means for example that existing elements are deleted when new elements are added with an existing name.
+
+When an attribute or dataclass is to be retrieved, the system will search the scopes in this sequence:
+
+1. page
+2. request
+3. session
+
+## Mathematical functions
+
+Mathematical functions may be used in all tags within a property value and in the condition part of the if and elseif tags. The z:write tag was created with mathematical functions in mind. It will write the value property to the responding html. The simplest form of using mathematical functions is like this:
+
+```html
+<z:write value=1+1></z:write>
+```
+
+This will write "2" to the html at the same position as the z:write tag. Instead of using numbers directly, entities may be used as in this example:
+
+```html
+<z:write value=$z:value[article.price] * 1.25></z:write>
+```
+
+This will add vat to the price.
+
+In Zpider these mathematical functions are available:
+
+    +   -   *  /  %
+
+Entities and constants may be mixed in any way and with any levels of parenthesis, as in this example:
+
+```html
+<z:write value=($z:value[cart.price] - ($z:value[cart.price] *
+$z:value[cart.discountprc] / 100)) * $z:value[cart.amount] >
+```
+
+This will calculate the sum for an article on the shoppingcart including the discount in %.
+
+Note! The precedense order of the functions are: \* / + -
+
+Mathematical functions may also be used in the condition part of the if-tag and elseif-tag, as in this example:
+
+```html
+<z:if $z:value[cart.price] * $z:value[cart.amount] * 1.25 gt 100000> 
+    The sum is too large
+</z:if>
+```
+
+## z:if
+
+The structure of the if-tag:
+
+```html
+<z:if condition..>
+<z:elseif condition..>
+<z:elseif...>
+<z:else>
+</z:if>
+```
+
+The condition may use any combination of these operators/values:
+
+    AND a AND b; a and b must both be true
+    OR a OR b; a or b must be true
+    NOT a NOT b; a must be true and b must be false
+    EQ a EQ b; a must be equal to b
+    NE a NE b; a must NOT be equal to b
+    GE a GE b; a must be greater than or equal to b
+    GT a GT b; a must be greater than b
+    LE a LE b; a must be less than or equal to b
+    LT a LT b; a must be less than b
+    has a has b; a must contain the substring b
+    startwith a startwith b; a must start with the substring b
+    endswith a endswith b; a must end with the substring b
+    + addition
+    - subtraction
+    * multiplication
+    / division
+    (...) any levels of parenthesis may be used
+    true a EQ true;
+    false a EQ false;
+
+Any string must be in quotes: "this is a string"; however if the string is only one word it will be interpreted as a string. If quotes are missing, and the word contains digits, it is assumed to be a number for example:
+
+```html
+<z:if $z:value[attr.price] GT 100.00>
+  The price is higher than 100
+</z:if>
+```
+
+Operators are case insensitive, so writing and or AND, eq or EQ is the same.
+
+Here are some more examples:
+
+```html
+<z:if $z:request[page] EQ "orderstep1">
+    The page is orderstep 1
+</z:if>
+```
+
+If-statements may be nested, a new if may be started within an if as in this example:
+
+```html
+<z:if $z:value[attribute.attributetype] eq 1 or $z:value[attribute.attributetype] eq 0 or $z:value[attribute.attributetype] eq "">
+<z:if $z:value[attribute.keyword] eq "zpiderorder.refcontact">
+    ##-- The refcontact name will be displayed instead of this webuser number.
+    <z:prepare scope=page dataclass=webuser alias=mycontact ActorNo=$z:value[zpiderorder.refcontact] disabled=0>
+    $z:value[mycontact.name]
+<z:else>
+    $z:valueof[attribute]
+</z:if>
+
+## -------------------------
+## Attribute type (2)
+## -------------------------
+<z:elseif $z:value[attribute.attributetype] eq "2">
+...
+<z:/if>
+```
+
+
+## z:include
+
+The include tag will include another module. This means, it will fetch the HTX-file for the specified module which is specific for the user's primary usergroup. There is one speciality about this: if the module is not defined it will fetch the htx-file articlelist.htx; that is the specified module name, with the .htx extension.
+
+User defined ASP.NET controls can be included and rendered by using control="control-path" property where `control-path` is an absolute or relative web path to the user defined control (.ascx). An absolute path always begins with "~/" (eg. ~/Controls/SimpleControl.ascx) and is relative to the application root folder. A relative path may be prefixed with "/" (eg. /Controls/SimpleControl.ascx or Controls/SimpleControl.ascx). In this case Zpider will attempt to fetch the control from either from the Theme folder (eg. ~/Themes/Controls/SimpleControl.ascx) or from application's root folder (~/Controls/SimpleControl.ascx). When the relative path is used controls must be placed either in ~/Controls/ or ~/Themes/Controls/ folder.
+
+In addition to the control path, control properties might be specified. The properties will be set to the user control if the property is marked as public and is writable.
+
+```html
+<z:include
+  [module="modulename"
+  |
+  control="control-path"
+  [property="value"
+  [property="value]]]"
+></z:include>
+```
+
+## z:webattributes
+
+The Webattributes tag is a repeating tag which fetches all Webattributes for a given module limited to the users access rights and in the defined sortorder. Use for example $z:value[artattr.headerstyle] for retrieveing properties of the webattributes itself. Use $z:valueof[artattr] to fetch the value of the keyword defined by the webattribute.
+
+```html
+<z:webattributes alias="artattr" module="article">
+  $z:valueof[artattr]...
+</z:webattributes>
+```
+
+    The module attribute gives the name of the module.
+    The alias attribute defines the dataclass which will hold the webattributes.
+
+## z:prepare
+
+The prepare tag is used create a dataclass. A dataclass represents zero, one or more datarows. You may fetch individual values of the datarow by using the $z:value[alias.keyword] entity or the $z:valueof[webattributes-dataclass] entity. When the dataclass is created it must be "saved" to one of three storage areas, called scope. When a dataclass is saved to the request it is available for the request, and automatically deleted after the request is processed. When a dataclass is saved to a page, it is available A prepare tag may contain additional properties. Each of these properties defines a filter;
+
+    name=$z:get[request.searchstr]
+
+Note! After the execution of the prepare tag, the first record is the current record.
+
+Note! Page is the default scope.
+
+```html
+<z:prepare
+  alias="article"
+  scope="session"
+  dataclass="article"
+  sortorder="{article.name} ASC"
+  filter="{article.name} >= B"
+  startrecord="0"
+  maxrows="200"
+></z:prepare>
+```
+
+    alias defines the storage name for the dataclass being prepared.
+    scope defines the storage area (session, request or page) for the dataclass being prepared.
+    dataclass defines the type of dataclass being prepared. See list of available dataclasses.
+    sortorder defines the sortorder for the data produced by the dataclass
+    filter defines additional elements to the where clause of the produced query.
+    startrecord define the startinc index of the collection. Zero based.
+    maxrows defines the maximum number of rows the dataclass should retrieve.
+
+## z:unprepare
+
+The unprepare will remove the dataclass from the storage area. A dataclass may only exists in one storagearea. It is not necessary to specify scope as the system will find the dataclass anyhow, but specifying scope will run slightly faster. If you specify scope, the system will only search in specified scope. It is good practice to specify scope as you always should be aware of the storageareas for the dataclasses.
+
+Note! Dataclasses stored in Request or Page will automatically be deleted. It should only be necessary to uprepare dataclasses stored in Session scope.
+
+```html
+<z:unprepare alias="article" scope="session"></z:unprepare>
+```
+
+    alias is the dataclass to be removed.
+    scope is the storage area of the dataclass.
+
+
+
+## z:refresh
+
+The refresh tag is similar in syntax to the prepare tag. The only difference is that refresh will use an existing dataclass and perform a new query on that dataclass.
+
+```html
+<z:refresh
+  alias="article"
+  scope="session"
+  dataclass="article"
+  sortorder="{article.name} ASC"
+  filter="{article.name} >= B"
+  startrecord="0"
+  maxrows="200"
+></z:refresh>
+```
+
+    alias defines the storage name for the dataclass being prepared.
+    scope defines the storage area (session, request or page) for the dataclass being prepared.
+    dataclass defines the type of dataclass being prepared. See list of available dataclasses.
+    sortorder defines the sortorder for the data produced by the dataclass
+    filter defines additional elements to the where clause of the produced query.
+    startrecord define the startinc index of the collection. Zero based.
+    maxrows defines the maximum number of rows the dataclass should retrieve.
+
+
+## z:foreach
+
+The foreach tag is a repeating tag to run through a dataset's row collection. The purpose of setting pagesize, startpage, startoffset and maxpages is to use the iteration entity to control paging. This makes it easy to tell the user which page he is on and to browse through pages.
+
+```html
+<z:foreach
+  alias="group"
+  scope="session"
+  pagesize="20"
+  maxrows="100"
+  maxpages="5"
+  startpage="1"
+  startoffset="1"
+></z:foreach>
+```
+
+    alias defines the storage name for the dataclass being prepared.
+    scope defines the storage area (session, request or page) for the dataclass being prepared.
+    pagesize defines the number of rows on each page
+    maxrows defines the maximum number of rows the dataclass should retrieve.
+    maxpages defines the maximum number of pages needed
+    startpage defines the starting page
+    startoffset defines the starting offset (index) in the rows collection. Zero based.
+
+
+## z:loadtree
+
+The Loadtree tag is a repeating tag and is used to browse through a tree dataclass. A tree dataclass is a dataclass which is represented as a tree structure. You may use the `$z:node[]` entity to read tree node properties of the current node in the dataclass.
+
+Note! The dataclass must first be prepared before using loadtree.
+
+```html
+<z:loadtree alias="artgrp" scope="session" counter="1">
+  ...
+</z:loadtree>
+```
+
+    alias defines the storage name for the dataclass being prepared.
+    scope defines the storage area (session, request or page) for the dataclass being prepared.
+    counter defines the starting value for the unique number of the node.
+
+
+## z:set
+
+The Set tag is a Non-repeating tag for setting an attribute in one of the three storageareas (scopes): page, request or session. This tag may be used if you need to save some values between requests or between pages being processed.
+
+```html
+<z:set name="myname" scope="request" value="myvalue">
+  or <z:set name="name" scope="scope">value</z:set></z:set
+>
+```
+
+    name The name of the attribute
+    scope The storage location (session, request or page)
+    value The value of the attribute
+
+
+## z:unset
+
+Removes an attribute which was earlier stored by the set-tag.
+
+*Note! All Request and Page attributes are automatically removed when the request is processed.*
+
+```html
+<z:unset name="myname" scope="request"></z:unset>
+```
+
+    name The name of the attribute
+    scope The storage location (session, request or page)
+
+
+## z:loop
+
+The loop tag is a repeating tag (requires a closing `</z:loop>` tag). The repeation goes on until the current index is greater than the until-value.
+
+```html
+<z:loop alias="pg" start="1" until=$z:iteration[article.pagecount]>
+  <a href="main.aspx?page=articlelist&startpage=$z:index[pg]&query=no">
+    $z:index[pg]
+  </a>
+</z:loop>
+```
+
+    alias The alias for the loop attribute. This may be used to fetch the current index as an entity (index-entity).
+    start The starting index. Default is 1
+    step The stepping value. Default is 1.
+    until The ending value.
+
+
+## z:subst
+
+This tag is mostly used when including new modules. Subst defines a new alias for an alias. If an includemodule uses article as the alias for the dataclass, but in this situation we want our included module to use the art alias for dataclass, you must the subst tag to change from article to art. The substitute is valid until unsubst is called or the request has been processed.
+
+*Note! The substitution does only live within a request.*
+
+```html
+<z:subst alias="article" use="art"></z:subst>
+```
+
+    alias The name of the attribute
+    use The storage location (session, request or page)
+
+
+## z:unsubst
+
+Removes a substitution for an alias.
+
+```html
+<z:unsubst alias="article"></z:unsubst>
+```
+
+    alias The name of the attribute
+
+
+## z:selectlist
+
+The selectlist tag will produce a combo-box holding a list of items to be displayed. It works in two ways: either by specifying a keyword where a list of values for that keyword is displayed, or if keyword is omitted, a default selection list for that dataclass is displayed.
+
+```html
+<z:selectlist alias="payterm" scope="request" keyword="name"></z:selectlist>
+```
+
+    alias The alias for the dataclass
+    scope The storage space for the dataclass
+    keyword The keyword which we want to display. If this keyword is missing, a default selection list is displayed for the dataclass.
+    includeblank true or blanks may be displayed
+    current The value of the current
+    Additional filters may be added using the name=value notation.
+
+
+## z:text
+The text tag may be used to fetch text from a physical file or from http. The text from the file or html returned by the http is inserted into the resulting at text-tag position. The full path will be constructed by joining: `path\dir\name`. The joining of the tree name will checking duplicated backslashes (\).
+
+```html
+<z:text
+  path=$z:value[clientadministrator.erpfilepath]
+  dir="Memo"
+  name=$z:value[art.notefile]
+  location="config"
+></z:text>
+```
+
+    path The physical path to the file (location = file or config), or a http-url (location=http).
+    dir A directory may be specified (valid for file and config)
+    name A filename may be added (valid for file and config)
+    location This is one of:
+
+        - file A physical file on the web server.
+        - config A physical file on the application server (System Manager Server).
+        - http Content from an http request.
+
+
+
+## z:img
+
+Any additional properties used by the `<img>` tag may be specified. The full path will be constructed by joining: `path\dir\name`.
+
+The `<z:img>` tag will map to a normal `<img>` tag, but will use showdoc as it's src. In addition, it will check the existence of the image. This is useful for displaying article picture. If the article picture does not exists, nothing is displayed instead of the standard error display.
+
+The processing is done in this priority order:
+
+1. Picture (pictureID) displayed using Showdoc
+2. Path, dir and/or name using Showdoc
+3. Src, checking existence of physical file
+
+```html
+<z:img
+  path=$z:value[support.erpfilepath]
+  dir="Images"
+  name=$z:value[article.picturefile]
+  location="config"
+></z:img>
+```
+
+    picture This is the PictureID as defined in System Manager: Images; corresponds to the name of the image.
+    path The image path.
+    dir The image directory.
+    name The image name.
+    src
+    returnsrc If true it will only returns the url for the image, not a full `<img...>` tag,  for example: Showdoc.aspx?PICTURE=logo.
+    location This is the same property used for the text tag. It is one of:
+
+        file A physical file on the web server.
+        config A physical file on the application server (System Manager Server).
+        http Content from an http request.
+
+## z:write
+
+The write tag will insert the calculation of the value tag into the resulting html. It was especially created to handle mathematical functions, although mathematical functions may exist in any attribute of any tag.
+
+```html
+<z:write value=($z:get[request.myattr] * 25) / 100> value Any value, also
+including mathematical functions. Click here for more information about
+mathematical functions.
+```
+
+## z:redirect
+
+The redirect tag has been developed to replace the old javascript redirect method (document.location = url) used for redirection in template system. The customer browser will be redirected immediately after the tag processing is finished, any other tags present after `<z:redirect>` tag being omitted. The following example will redirect the user to ~/main.aspx?page=...&refresh=false:
+
+```html
+<z:redirect (url="…" | page="…" ) [property="value" | …]></z:redirect>
+```
+
+    url will redirect the browser to the specified url
+    pagewill redirect the browser to main.aspx?page=…
+    other properties will be added to the redirection url as &property=value
+
+```html
+<z:redirect page=$z:get[request.senderpage] refresh="false"></z:redirect>
+```
+
+## Entities
+
+Entities are used to fetch text or values from dataclasses or attributes. The syntax is simpler than the tag syntext. The general syntax of an entity is:
+
+    $z:name[left.right]
+
+The left will normally be a dataclass and the right will be a column of that dataclass. The right may be omitted ($z:name[left]).
+
+## $z:value[]
+
+The value entity will fetch a keyword value from a dataclass. Alias and Keyword must be specified. The resulting string is inserted at the position of the entity.
+
+    $z:value[alias.keyword]
+
+    alias The alias for a dataclass.
+    keyword A keyword supported by the dataclass.
+
+
+## $z:valueof[]
+
+The valueof entity uses a webattribute dataclass and fetches the value of the keyword defined by the current webattribute ($z:valueof[alias]) or it will fetch a specific keyword using the webattribute formatting ($z:valueof[alias.keyword]). The valueof entity is normally used together with the webattributes tag.
+
+    $z:valueof[alias]
+    $z:valueof[alias.keyword]
+
+    alias The alias for a dataclass.
+    keyword A keyword supported by the dataclass.
+
+
+## $z:get[]
+
+Get a value set in a scope.
+
+    $z:get[myattr]
+    $z:get[request.zip]
+
+    myattr The name of the attribute, this may already be defined by the <z:set name=myattr value="abc"> Url or form attributes may be retrieved by specifying request as storage scope as in the example above.
+
+The set tag and get entity may work well together as in this example:
+
+```html
+<z:set name="zipcode" scope="session" value=$z:get[request.zip]>
+
+$z:get[session.zipcode]
+```
+
+The set-tag will fetch zip from the request and save this on the session storage area, which will survive as long as the session lives. The get-entity will fetch the zipcode again.
+
+## $z:node[]
+
+    $z:node[alias.function]
+
+    alias The alias for the dataclass which is a treetype dataclass.
+
+The available functions:
+
+    name The name of the current node
+    number Uniquely identifies the node
+    parentnumber The unique number of the parent
+    parentname The name of the parent node
+    childcount The number of children for the current node
+    listorder The number of the node within all nodes, 0-based
+    childorder The order of the current node within the parent, 0-based
+    level The level of the current node, 0-based
+    isroot Y if the current node is the root node; meaning no parents
+    isleaf Y if the current node is the leaf node; meaning no children
+    counter The counter for the current node
+
+The node entity must work with tree type dataclasses to get treeinfo about the current node.
+
+## $z:iteration[]
+
+Every dataclass has a built in Pagecontrol. The iteration entity is used fetch data about from the pagecontrol. This is useful for displaying the page-info.
+
+    $z:iteration[alias.function]
+
+    alias The alias for the dataclass
+
+The available functions:
+
+    current Number of the current entry in the iteration, 0 based
+    currentonpage Number of the current entry on the current page, 0 based
+    nextpagestartoffset The offset for the next page from the current page
+    currentpagestartoffset The offset for the current page
+    previouspagestartoffset The offset for the previous page from the current page
+    maxpagecount Maximum number of entries per page for this iteration
+    maxcount Maximum number of entries totally
+    count Totally number of entries. -1 if not available (undefined)
+    pagecount The totally number of pages
+    islastentry Y if the current entry is the last entry
+    islastonpage Y if the current entry is the last of the current page
+    isfirstentry Y if the current entry is the first entry
+    isfirstonpage Y if the current entry is the first on the page
+    currentpage The number of the current page, 0 based
+    isfirstpage Y if the current page is the first page
+    islastpage Y if the current page is the last page
+
+```html
+<z:loop alias="pg" start="1" until=$z:iteration[article.pagecount]>
+  <a
+    href="main.aspx?page=articlelist&gid=$z:get[request.gid]&gidlevel=$z:get[request.gidlevel]&startpage=$z:index[pg]&query=no"
+    >$z:index[pg]</a
+  >
+</z:loop>
+```
+
+## $z:text[]
+
+Displays a text from the text-table of System Managet given it's textID. The text is displayed in the users current language and for the users usergroup. If there is no text for that combination, it will try to fetch a text for all usergroups on the users current language. If that is not found, it will fetch the text for language=999 (all languages).
+
+    $z:text[TXT_WELCOME]
+
+## $z:styletext[]
+
+This is the same as the $z:text entity, except that it will add a `<span class=style>text...</span>` The style is defined in the System Manager for the textid.
+
+    $z:styletext[TXT_WELCOME]
+
+## $z:index[]
+
+The index entity is used together with the loop tag to get the current index within the loop.
+
+    $z:index[loopattr]
+
+```html
+<z:loop alias="loopattr" start="1" until=$z:iteration[article.pagecount]>
+  $z:index[loopattr]
+</z:loop>
+```
+
+## $z:exists[]
+
+This will check the given scope for an attribute or dataclass. Returns T if that attribute or dataclass exists
+
+    $z:exist[request.article]
+
+## $z:error[]
+
+Displays the error for an alias of a dataclass or for a specific keyword on that dataclass.
+
+    $z:error[user]
+    $z:error[user.zip]
+
+For the error of a dataclass, these values are returned:
+
+    0 None No error
+    1 General A general, unspecified error
+    2 ComponentWrite Unable to write to component
+    3 AddFailure Unable to add data
+    4 LoginFailed Unable to login
+    5 InvalidData Invalid data provided; illegal format and/or values
+    10 SmtpError Smtp Error
+    11 SendEmail Unable to send email
+    12 MissingInfo Some fields are missing data
+    20 MissingPaymentMethod Missing the payment method
+    21 MissingPaymentObject The required payment class is missing
+    22 TransactionFailed Payment transaction failed
+    30 InvalidOrder Missing or invalid order
+
+For the error of a specific keyword (field), these values are returned:
+
+    0 None No error
+    1 Mandatory Missing mandatory data
+    2 InputFormat Wrong input format
+    3 PasswordDontMatch Invalid password
+    4 DataLengthTooShort The input length is shorter than expected
+    5 AlreadyExist The field already exists
+    6 NotFound Not found
+    7 InvalidDateTime Invalid DateTime
+    8 NotAllowedChars Not allowed chars in password or username
+    9 DataLengthTooLarge The input length is larger than expected
+    10 InvalidEmailFormat Invalid Email format
+
+## $z:errorof[]
+
+This will get a fielderror (see $z:error entity) from the current webattribute.
+
+    $z:errorof[webattralias]
+
