@@ -35,7 +35,6 @@ const CodeBlock = ({ children: exampleCode, ...props }) => {
         {...defaultProps}
         code={exampleCode}
         language="javascript"
-        theme={prismTheme}
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <Pre className={className} style={style} p={3}>
