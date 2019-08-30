@@ -278,6 +278,22 @@ Note! Page is the default scope.
     startrecord define the startinc index of the collection. Zero based.
     maxrows defines the maximum number of rows the dataclass should retrieve.
 
+### Advanced filters
+
+By combining [`<z:set`](#z:set) and `<z:prepare>` you can create advanced filters. The following example will fetch TOP 10 active offers from Visma Global.
+
+```html
+<z:set scope="page" name="filter">ART.ArticleNo IN (SELECT TOP 10 ArticleNo FROM Article A WHERE GETDATE() BETWEEN A.StartDateOfferPrice AND A.StopDateOfferPrice AND A.OfferPrice > 0 ORDER BY A.StartDateOfferPrice desc)</z:set>
+<z:prepare alias="offers" dataclass="article" filter=$z:get[page.filter] maxrows="10" startrecord="0">
+<z:if $z:iteration[offers.count] gt 0>
+    <hr />
+    <h3>Current offers</h3>
+    <z:subst alias=article use=offers>
+    ... Here you'll need some code to present the offers.
+    <z:unsubst alias=article>
+</z:if>
+```
+
 ## z:unprepare
 
 The unprepare will remove the dataclass from the storage area. A dataclass may only exists in one storagearea. It is not necessary to specify scope as the system will find the dataclass anyhow, but specifying scope will run slightly faster. If you specify scope, the system will only search in specified scope. It is good practice to specify scope as you always should be aware of the storageareas for the dataclasses.
@@ -513,6 +529,17 @@ The write tag will insert the calculation of the value tag into the resulting ht
 including mathematical functions. Click here for more information about
 mathematical functions.
 ```
+
+## z:esc
+
+This works like `<z:write`, but it will escape the value you pass it.
+
+```html
+<z:set scope="page" name="html_value"><b>This text could be bold</b></z:set>
+<z:esc mode="html" value=$z:get[page.html_value]>
+```
+
+This will actually print `&gt;b&lt;This text could be bold&gt;/b&lt;`.
 
 ## z:redirect
 
