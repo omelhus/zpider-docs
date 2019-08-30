@@ -110,13 +110,13 @@ When an attribute or dataclass is to be retrieved, the system will search the sc
 Mathematical functions may be used in all tags within a property value and in the condition part of the if and elseif tags. The z:write tag was created with mathematical functions in mind. It will write the value property to the responding html. The simplest form of using mathematical functions is like this:
 
 ```html
-<z:write value=1+1></z:write>
+<z:write value=1+1>
 ```
 
 This will write "2" to the html at the same position as the z:write tag. Instead of using numbers directly, entities may be used as in this example:
 
 ```html
-<z:write value=$z:value[article.price] * 1.25></z:write>
+<z:write value=$z:value[article.price] * 1.25>
 ```
 
 This will add vat to the price.
@@ -232,7 +232,7 @@ In addition to the control path, control properties might be specified. The prop
   control="control-path"
   [property="value"
   [property="value]]]"
-></z:include>
+>
 ```
 
 ## z:webattributes
@@ -267,7 +267,7 @@ Note! Page is the default scope.
   filter="{article.name} >= B"
   startrecord="0"
   maxrows="200"
-></z:prepare>
+>
 ```
 
     alias defines the storage name for the dataclass being prepared.
