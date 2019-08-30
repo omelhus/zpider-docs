@@ -285,7 +285,7 @@ The unprepare will remove the dataclass from the storage area. A dataclass may o
 Note! Dataclasses stored in Request or Page will automatically be deleted. It should only be necessary to uprepare dataclasses stored in Session scope.
 
 ```html
-<z:unprepare alias="article" scope="session"></z:unprepare>
+<z:unprepare alias="article" scope="session">
 ```
 
     alias is the dataclass to be removed.
@@ -306,7 +306,7 @@ The refresh tag is similar in syntax to the prepare tag. The only difference is 
   filter="{article.name} >= B"
   startrecord="0"
   maxrows="200"
-></z:refresh>
+>
 ```
 
     alias defines the storage name for the dataclass being prepared.
@@ -331,7 +331,7 @@ The foreach tag is a repeating tag to run through a dataset's row collection. Th
   maxpages="5"
   startpage="1"
   startoffset="1"
-></z:foreach>
+>...</z:foreach>
 ```
 
     alias defines the storage name for the dataclass being prepared.
@@ -366,8 +366,7 @@ The Set tag is a Non-repeating tag for setting an attribute in one of the three 
 
 ```html
 <z:set name="myname" scope="request" value="myvalue">
-  or <z:set name="name" scope="scope">value</z:set></z:set
->
+  or <z:set name="name" scope="scope">value</z:set>
 ```
 
     name The name of the attribute
@@ -382,7 +381,7 @@ Removes an attribute which was earlier stored by the set-tag.
 *Note! All Request and Page attributes are automatically removed when the request is processed.*
 
 ```html
-<z:unset name="myname" scope="request"></z:unset>
+<z:unset name="myname" scope="request">
 ```
 
     name The name of the attribute
@@ -414,7 +413,7 @@ This tag is mostly used when including new modules. Subst defines a new alias fo
 *Note! The substitution does only live within a request.*
 
 ```html
-<z:subst alias="article" use="art"></z:subst>
+<z:subst alias="article" use="art">
 ```
 
     alias The name of the attribute
@@ -426,7 +425,7 @@ This tag is mostly used when including new modules. Subst defines a new alias fo
 Removes a substitution for an alias.
 
 ```html
-<z:unsubst alias="article"></z:unsubst>
+<z:unsubst alias="article">
 ```
 
     alias The name of the attribute
@@ -437,7 +436,7 @@ Removes a substitution for an alias.
 The selectlist tag will produce a combo-box holding a list of items to be displayed. It works in two ways: either by specifying a keyword where a list of values for that keyword is displayed, or if keyword is omitted, a default selection list for that dataclass is displayed.
 
 ```html
-<z:selectlist alias="payterm" scope="request" keyword="name"></z:selectlist>
+<z:selectlist alias="payterm" scope="request" keyword="name">
 ```
 
     alias The alias for the dataclass
@@ -457,7 +456,7 @@ The text tag may be used to fetch text from a physical file or from http. The te
   dir="Memo"
   name=$z:value[art.notefile]
   location="config"
-></z:text>
+>
 ```
 
     path The physical path to the file (location = file or config), or a http-url (location=http).
@@ -489,7 +488,7 @@ The processing is done in this priority order:
   dir="Images"
   name=$z:value[article.picturefile]
   location="config"
-></z:img>
+>
 ```
 
     picture This is the PictureID as defined in System Manager: Images; corresponds to the name of the image.
@@ -519,7 +518,7 @@ mathematical functions.
 The redirect tag has been developed to replace the old javascript redirect method (document.location = url) used for redirection in template system. The customer browser will be redirected immediately after the tag processing is finished, any other tags present after `<z:redirect>` tag being omitted. The following example will redirect the user to ~/main.aspx?page=...&refresh=false:
 
 ```html
-<z:redirect (url="…" | page="…" ) [property="value" | …]></z:redirect>
+<z:redirect (url="…" | page="…" ) [property="value" | …]>
 ```
 
     url will redirect the browser to the specified url
@@ -527,7 +526,7 @@ The redirect tag has been developed to replace the old javascript redirect metho
     other properties will be added to the redirection url as &property=value
 
 ```html
-<z:redirect page=$z:get[request.senderpage] refresh="false"></z:redirect>
+<z:redirect page=$z:get[request.senderpage] refresh="false">
 ```
 
 ## Entities
