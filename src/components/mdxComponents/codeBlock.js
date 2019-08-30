@@ -42,21 +42,6 @@ const CodeBlock = ({ children: exampleCode, ...props }) => {
             {cleanTokens(tokens).map((line, i) => {
               let lineClass = {};
               let isDiff = false;
-              if (line[0] && line[0].content.length && line[0].content[0] === '+') {
-                lineClass = {'backgroundColor': 'rgba(76, 175, 80, 0.2)'};
-                isDiff = true;
-              }
-              else if (line[0] && line[0].content.length && line[0].content[0] === '-') {
-                lineClass = {'backgroundColor': 'rgba(244, 67, 54, 0.2)'};
-                isDiff = true;
-              }
-              else if(line[0] && line[0].content === '' && line[1] && line[1].content === '+') {
-                lineClass = {'backgroundColor': 'rgba(76, 175, 80, 0.2)'};
-                isDiff = true;
-              } else if(line[0] && line[0].content === ''&& line[1] && line[1].content === '-') {
-                lineClass = {'backgroundColor': 'rgba(244, 67, 54, 0.2)'};
-                isDiff = true;
-              }
               const lineProps = getLineProps({line, key: i});
               lineProps.style = lineClass;
               const diffStyle = {'userSelect': 'none', 'MozUserSelect': '-moz-none', 'WebkitUserSelect': 'none'};
