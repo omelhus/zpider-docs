@@ -17,7 +17,7 @@ A HTML Template is an HTML file containing:
 
 A template is processed on the server side. The result of this processing is an html file which is returned to the client (response). The strategy is that all display of data to the client is done by the template system. The templates are first parsed and a parsed version of the template is used for processing. Once the template has been parsed, the parsed version will be used lateer. This enables quick processing of the templates.
 
-### Zpider tags
+## Tags
 
 The main purpose of the zpider tags is to select the data to be display, control repetions, including new templates, and so on, although there are tags that actually writes data as the text and write tags.
 
@@ -41,7 +41,7 @@ A Repeating tag does have a closing tag and is on the format:
 
 The tag body of a repeating tag will be executed the number of repetitions defined by the repeating tag. A webattributes tag will repeate for each webattribute. A loop tag will repeate the number of times defined in the start, until and step properties.
 
-## Zpider Entities
+## Entities
 
 The main purpose of the entity is to write data to the response html. The entity has the general syntax:
 
@@ -744,33 +744,37 @@ Displays the error for an alias of a dataclass or for a specific keyword on that
 
 For the error of a dataclass, these values are returned:
 
-    0 None No error
-    1 General A general, unspecified error
-    2 ComponentWrite Unable to write to component
-    3 AddFailure Unable to add data
-    4 LoginFailed Unable to login
-    5 InvalidData Invalid data provided; illegal format and/or values
-    10 SmtpError Smtp Error
-    11 SendEmail Unable to send email
-    12 MissingInfo Some fields are missing data
-    20 MissingPaymentMethod Missing the payment method
-    21 MissingPaymentObject The required payment class is missing
-    22 TransactionFailed Payment transaction failed
-    30 InvalidOrder Missing or invalid order
+| Code | Name  | Description |
+| - |:- |:- |
+| 0 | None No error
+| 1 | General A general, unspecified error
+| 2 | ComponentWrite Unable to write to component
+| 3 | AddFailure Unable to add data
+| 4 | LoginFailed Unable to login
+| 5 | InvalidData Invalid data provided; illegal format and/or values
+| 10 | SmtpError Smtp Error
+| 11 | SendEmail Unable to send email
+| 12 | MissingInfo Some fields are missing data
+| 20 | MissingPaymentMethod Missing the payment method
+| 21 | MissingPaymentObject The required payment class is missing
+| 22 | TransactionFailed Payment transaction failed
+| 30 | InvalidOrder Missing or invalid order
 
 For the error of a specific keyword (field), these values are returned:
 
-    0 None No error
-    1 Mandatory Missing mandatory data
-    2 InputFormat Wrong input format
-    3 PasswordDontMatch Invalid password
-    4 DataLengthTooShort The input length is shorter than expected
-    5 AlreadyExist The field already exists
-    6 NotFound Not found
-    7 InvalidDateTime Invalid DateTime
-    8 NotAllowedChars Not allowed chars in password or username
-    9 DataLengthTooLarge The input length is larger than expected
-    10 InvalidEmailFormat Invalid Email format
+| Code | Name  | Description |
+| - |:- |:- |
+| 0 | None | No error
+| 1 | Mandatory | Missing mandatory data
+| 2 | InputFormat | Wrong input format
+| 3 | PasswordDontMatch | Invalid password
+| 4 | DataLengthTooShort | The input length is shorter than expected
+| 5 | AlreadyExist | The field already exists
+| 6 | NotFound | Not found
+| 7 | InvalidDateTime | Invalid DateTime
+| 8 | NotAllowedChars | Not allowed chars in password or username
+| 9 | DataLengthTooLarge | The input length is larger than expected
+| 10 | InvalidEmailFormat | Invalid Email format
 
 ## $z:errorof[]
 
