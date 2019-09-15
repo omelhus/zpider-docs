@@ -2,7 +2,7 @@ const config = {
 	"gatsby": {
 		"pathPrefix": "/",
 		"siteUrl": "https://docs.zpider.io",
-		"gaTrackingId": null
+		"gaTrackingId": 'UA-6195546-11'
 	},
 	"header": {
 		"logo": "https://www.on-it.no/wp-content/themes/on-it/style/images/on_it_logo.png",

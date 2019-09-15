@@ -31,12 +31,6 @@ export default class HTML extends React.Component {
   			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   			  crossOrigin="anonymous"></script>
           <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossOrigin="anonymous"></script>
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-6195546-11"></script>
-        <script dangerouslySetInnerHTML={{__html: `window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'UA-6195546-11');`}}>
-        </script>
           {this.props.headComponents}
         </head>
         <body {...this.props.bodyAttributes}>
