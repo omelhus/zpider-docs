@@ -612,9 +612,11 @@ The left will normally be a dataclass and the right will be a column of that dat
 The value entity will fetch a keyword value from a dataclass. Alias and Keyword must be specified. The resulting string is inserted at the position of the entity.
 
     $z:value[alias.keyword]
-
-    alias The alias for a dataclass.
-    keyword A keyword supported by the dataclass.
+---
+| Attribute | Description  |
+| - |:- |
+| alias | The alias for a dataclass.
+| keyword | A keyword supported by the dataclass.
 
 
 ## $z:valueof[]
@@ -623,9 +625,11 @@ The valueof entity uses a webattribute dataclass and fetches the value of the ke
 
     $z:valueof[alias]
     $z:valueof[alias.keyword]
-
-    alias The alias for a dataclass.
-    keyword A keyword supported by the dataclass.
+---
+| Attribute | Description  |
+| - |:- |
+| alias | The alias for a dataclass.
+| keyword | A keyword supported by the dataclass.
 
 
 ## $z:get[]
@@ -634,8 +638,11 @@ Get a value set in a scope.
 
     $z:get[myattr]
     $z:get[request.zip]
-
-    myattr The name of the attribute, this may already be defined by the <z:set name=myattr value="abc"> Url or form attributes may be retrieved by specifying request as storage scope as in the example above.
+---
+| Attribute | Description  |
+| - |:- |
+| myattr | The name of the attribute, this may already be defined by the `<z:set name=myattr value="abc">` Url or form attributes may be retrieved by specifying request as storage
+| scope | as in the example above.
 
 The set tag and get entity may work well together as in this example:
 
@@ -650,22 +657,26 @@ The set-tag will fetch zip from the request and save this on the session storage
 ## $z:node[]
 
     $z:node[alias.function]
-
-    alias The alias for the dataclass which is a treetype dataclass.
+---    
+| Attribute | Description  |
+| - |:- |
+| alias | The alias for the dataclass which is a treetype dataclass.
 
 The available functions:
-
-    name The name of the current node
-    number Uniquely identifies the node
-    parentnumber The unique number of the parent
-    parentname The name of the parent node
-    childcount The number of children for the current node
-    listorder The number of the node within all nodes, 0-based
-    childorder The order of the current node within the parent, 0-based
-    level The level of the current node, 0-based
-    isroot Y if the current node is the root node; meaning no parents
-    isleaf Y if the current node is the leaf node; meaning no children
-    counter The counter for the current node
+  
+| Function | Description  |
+| - |:- |
+| name | The name of the current node
+| number | Uniquely identifies the node
+| parentnumber | The unique number of the parent
+| parentname | The name of the parent node
+| childcount | The number of children for the current node
+| listorder | The number of the node within all nodes, 0-based
+| childorder | The order of the current node within the parent, 0-based
+| level | The level of the current node, 0-based
+| isroot | `Y` if the current node is the root node; meaning no parents
+| isleaf | `Y` if the current node is the leaf node; meaning no children
+| counter | The counter for the current node
 
 The node entity must work with tree type dataclasses to get treeinfo about the current node.
 
@@ -674,34 +685,37 @@ The node entity must work with tree type dataclasses to get treeinfo about the c
 Every dataclass has a built in Pagecontrol. The iteration entity is used fetch data about from the pagecontrol. This is useful for displaying the page-info.
 
     $z:iteration[alias.function]
-
-    alias The alias for the dataclass
+---    
+| Attribute | Description  |
+| - |:- |
+| alias | The alias for the dataclass
 
 The available functions:
 
-    current Number of the current entry in the iteration, 0 based
-    currentonpage Number of the current entry on the current page, 0 based
-    nextpagestartoffset The offset for the next page from the current page
-    currentpagestartoffset The offset for the current page
-    previouspagestartoffset The offset for the previous page from the current page
-    maxpagecount Maximum number of entries per page for this iteration
-    maxcount Maximum number of entries totally
-    count Totally number of entries. -1 if not available (undefined)
-    pagecount The totally number of pages
-    islastentry Y if the current entry is the last entry
-    islastonpage Y if the current entry is the last of the current page
-    isfirstentry Y if the current entry is the first entry
-    isfirstonpage Y if the current entry is the first on the page
-    currentpage The number of the current page, 0 based
-    isfirstpage Y if the current page is the first page
-    islastpage Y if the current page is the last page
-
+| Function | Description  |
+| - |:- |
+| current | Number of the current entry in the iteration, 0 based
+| currentonpage | Number of the current entry on the current page, 0 based
+| nextpagestartoffset | The offset for the next page from the current page
+| currentpagestartoffset | The offset for the current page
+| previouspagestartoffset | The offset for the previous page from the current page
+| maxpagecount | Maximum number of entries per page for this iteration
+| maxcount | Maximum number of entries totally
+| count | Totally number of entries. -1 if not available (undefined)
+| pagecount | The totally number of pages
+| islastentry | `Y` if the current entry is the last entry
+| islastonpage | `Y` if the current entry is the last of the current page
+| isfirstentry | `Y` if the current entry is the first entry
+| isfirstonpage | `Y` if the current entry is the first on the page
+| currentpage | The number of the current page, 0 based
+| isfirstpage | `Y` if the current page is the first page
+| islastpage | `Y` if the current page is the last page
+---
 ```html
 <z:loop alias="pg" start="1" until=$z:iteration[article.pagecount]>
-  <a
-    href="main.aspx?page=articlelist&gid=$z:get[request.gid]&gidlevel=$z:get[request.gidlevel]&startpage=$z:index[pg]&query=no"
-    >$z:index[pg]</a
-  >
+    <a href="main.aspx?page=articlelist&gid=$z:get[request.gid]&gidlevel=$z:get[request.gidlevel]&startpage=$z:index[pg]&query=no">
+        $z:index[pg]
+    </a>
 </z:loop>
 ```
 
@@ -746,19 +760,19 @@ For the error of a dataclass, these values are returned:
 
 | Code | Name  | Description |
 | - |:- |:- |
-| 0 | None No error
-| 1 | General A general, unspecified error
-| 2 | ComponentWrite Unable to write to component
-| 3 | AddFailure Unable to add data
-| 4 | LoginFailed Unable to login
-| 5 | InvalidData Invalid data provided; illegal format and/or values
-| 10 | SmtpError Smtp Error
-| 11 | SendEmail Unable to send email
-| 12 | MissingInfo Some fields are missing data
-| 20 | MissingPaymentMethod Missing the payment method
-| 21 | MissingPaymentObject The required payment class is missing
-| 22 | TransactionFailed Payment transaction failed
-| 30 | InvalidOrder Missing or invalid order
+| 0 | None | No error
+| 1 | General | A general, unspecified error
+| 2 | ComponentWrite | Unable to write to component
+| 3 | AddFailure | Unable to add data
+| 4 | LoginFailed | Unable to login
+| 5 | InvalidData | Invalid data provided; illegal format and/or values
+| 10 | SmtpError | Smtp Error
+| 11 | SendEmail | Unable to send email
+| 12 | MissingInfo | Some fields are missing data
+| 20 | MissingPaymentMethod | Missing the payment method
+| 21 | MissingPaymentObject | The required payment class is missing
+| 22 | TransactionFailed | Payment transaction failed
+| 30 | InvalidOrder | Missing or invalid order
 
 For the error of a specific keyword (field), these values are returned:
 
@@ -778,7 +792,7 @@ For the error of a specific keyword (field), these values are returned:
 
 ## $z:errorof[]
 
-This will get a fielderror (see $z:error entity) from the current webattribute.
+This will get a fielderror (see `$z:error` entity) from the current webattribute.
 
     $z:errorof[webattralias]
 

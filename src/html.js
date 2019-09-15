@@ -52,6 +52,7 @@ export default class HTML extends React.Component {
             `
           }}
           />
+          <script id="mcjs" dangerouslySetInnerHTML={{__html: `!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/e143de53810e903dc9ed4bb40/1188223bfacfb0f8273c986ba.js");`}}></script>
         </body>
       </html>
     )
