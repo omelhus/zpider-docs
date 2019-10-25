@@ -6,8 +6,22 @@ metaDescription: "Let's Encrypt is a free CA providing a simple way for you to s
 
 [Let's Encrypt](https://letsencrypt.org/) is a **free** CA providing a simple way for you to secure your Zpider eShop.
 
+## Guide for setting up Let's Encrypt with Zpider v11.2 and onwards.
+
 1. Download the Let's Encrypt ACME client from https://github.com/PKISharp/win-acme/releases
-2. Extract it to a place that makes sense (like c:\on it\)
+2. Extract it to a place that makes sense (like c:\wacs\)
+3. Ensure that both port 80 and 443 is open from the internet
+4. Ensure that you've set a custom domain on the site in IIS
+5. Execute win-acme.exe from wherever you extracted it
+6. Follow the instructions from win-acme.
+7. Verify that HTTPS works on your site.
+8. Update `<UseHttps>false</UseHttps>` to `<UseHttps>true</UseHttps>` in eShop.custom.config.
+9. Use [IISCrypto from Nartac](https://www.nartac.com/Products/IISCrypto/Download) to disable insecure protocols and ciphers.
+
+## Guide for Zpider eShop pre v11.2
+
+1. Download the Let's Encrypt ACME client from https://github.com/PKISharp/win-acme/releases
+2. Extract it to a place that makes sense (like c:\wacs\)
 3. Ensure that both port 80 and 443 is open from the internet
 4. Ensure that you've set a custom domain on the site in IIS
 5. Execute win-acme.exe from wherever you extracted it
