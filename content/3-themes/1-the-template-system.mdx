@@ -228,19 +228,23 @@ If-statements may be nested, a new if may be started within an if as in this exa
 
 The include tag will include another module. This means, it will fetch the HTX-file for the specified module which is specific for the user's primary usergroup. There is one speciality about this: if the module is not defined it will fetch the htx-file articlelist.htx; that is the specified module name, with the .htx extension.
 
+**v12**: Properties passed when including a module is accessible using `$z:config[attribute_name]`.
+
 User defined ASP.NET controls can be included and rendered by using control="control-path" property where `control-path` is an absolute or relative web path to the user defined control (.ascx). An absolute path always begins with "~/" (eg. ~/Controls/SimpleControl.ascx) and is relative to the application root folder. A relative path may be prefixed with "/" (eg. /Controls/SimpleControl.ascx or Controls/SimpleControl.ascx). In this case Zpider will attempt to fetch the control from either from the Theme folder (eg. ~/Themes/Controls/SimpleControl.ascx) or from application's root folder (~/Controls/SimpleControl.ascx). When the relative path is used controls must be placed either in ~/Controls/ or ~/Themes/Controls/ folder.
 
 In addition to the control path, control properties might be specified. The properties will be set to the user control if the property is marked as public and is writable.
 
 ```html
 <z:include
-  [module="modulename"
+  module="modulename"
+  [property="value"]
   |
   control="control-path"
-  [property="value"
-  [property="value]]]"
+  [property="value"]
+  [property2="value"]
 >
 ```
+
 
 ## z:webattributes
 
@@ -274,6 +278,7 @@ Note! After the execution of the prepare tag, the first record is the current re
   sortorder="{article.name} ASC"
   filter="{article.name} >= B"
   startrecord="0"
+  pagesize="20" ## New in v12 
   maxrows="200">
 ```
 ---
@@ -286,6 +291,7 @@ Note! After the execution of the prepare tag, the first record is the current re
 | filter | defines additional elements to the where clause of the produced query. |
 | startrecord | define the startinc index of the collection. Zero based. |
 | maxrows | defines the maximum number of rows the dataclass should retrieve. *Default: 200* |
+| pagesize (**v12**) | defines the pagesize on PageControl.  |
 
 ### Advanced filters
 
@@ -572,6 +578,9 @@ The write tag will insert the calculation of the value tag into the resulting ht
 | Attribute | Description  |
 | - |:- |
 | value | Any value, also including mathematical functions. |
+| format (**v12**) | .Net formatting string like {0:0.00} etc. |
+| transform (**v12**) | Available transformations are `uppercase`, `lowercase`, `ucfirst` or `ucwords` |
+| trim (**v12**) | Trim output of the function |
 
 ## z:esc
 
@@ -583,6 +592,27 @@ This works like `<z:write`, but it will escape the value you pass it.
 ```
 
 This will actually print `&gt;b&lt;This text could be bold&gt;/b&lt;`.
+
+## z:meta
+
+Set meta tags in head.
+
+---
+| Attribute | Description  |
+| - |:- |
+| name | Set ordinary meta tags like `<meta name=[name]`. Special handing for title, description and keywords. All others will be set raw.  |
+| property | Set open graph meta tags like `<meta property=[property]`.  |
+
+### Example
+
+This sets the open graph meta tag `og:image` to the full URL of the product image
+
+```
+<z:meta name="og:image">
+  <z:img path=$z:value[support.erpfilepath] dir="Images" name=$z:value[article.picturefile] absolute="true" returnsrc="true" location="config">
+</z:meta>
+```
+
 
 ## z:redirect
 
