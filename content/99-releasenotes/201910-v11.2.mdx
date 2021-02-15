@@ -1,0 +1,23 @@
+﻿---
+title: "Zpider eShop v11.2"
+metaTitle: "Release Notes - 11.2"
+metaDescription: "These are release notes for v11.2 of Zpider eShop"
+---
+
+## Fixed issues
+
+- If Fusion is not starting due to corrupt messages it will fix this automatically and start anyway.
+- With HTTPS setup Zpider will no longer redirect from HTTPS to HTTP. There's now also a generic UseHttp flag in eShop.custom.config that'll let you setup redirect to https for the whole site. The Urls settings no longer cares about if the request is coming throug http or https.
+- Order processor can now have multiple recipients. Use ; as a separator.
+- Sort order is now enabled on images on modules.
+
+## Fixed in installation
+
+- During upgrade the Global Connection information will be correctly set.
+- Communications with IIS no longer requires IIS Metabase Compatibility.
+- During installation (not upgrade) you get the option to verify that all required roles and features are installed.
+- If the installation fails you can now fix the issue and then retry instead of going through the whole installer again.
+
+## Download
+
+[Zpider eShop v11.2](https://download.zpider.io/release/Zpider-v11.20.zip)

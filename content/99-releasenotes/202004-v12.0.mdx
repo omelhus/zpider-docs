@@ -1,0 +1,160 @@
+---
+title: "Zpider eShop v12.0"
+metaTitle: "Release Notes - 12.0"
+metaDescription: "These are release notes for v12.0 of Zpider eShop"
+---
+
+## News
+
+- ZeroCool is the new default layout in Zpider. It's a modern layout supporting all the new features of Zpider.
+- There's a new admin for plugins and templates. 
+- Templates can now be modified directly in the browser, including css and js with live reloading. The template editor has full HTX autocomplete support.
+- Automatic bundling of css and js
+- Plugins! We now have plugin support in Zpider. See list of plugins below. 
+- Checkout as Guest (Set `<DirectOrder>true</DirectOrder>` in `eShop.custom.config`)
+- Documents now support languages
+- Language support directly in the text editor
+- DefaultDeliveryDays can now be set in GeneralConfiguration in custom config. There's also an option to not deliver on weekends.
+- Requires at least Windows Server 2012 R2 and .Net Framework 4.8
+
+## Fixed issues
+
+- Fusion service thread pool starvation and many memory leaks are fixed
+- The PersistentCache is improved and the core functionality is rewritten
+- Huge improvements to the grouplist and menuitem handling. In one instance we saw the render of the grouplist go from 2000ms to 60ms.
+- Global Integration: If the user is a contact the correct values for ContactNoInvoice and NameContactNoInvoice will be set on ZpiderOrder
+- WebAttributes with format DefaultDate now supports HTML5 date inputs
+- If a date property was set to empty or null on ZpiderOrder it would throw an error
+- During upgrade the SMTP username and password would be lost
+- If the disk ran out of space the Fusion Service would not start because of corrupted message files
+- If the current payment method is not supported the first available will be selected (think invoice is not available, but credit card is)
+
+## HTX templates
+
+There's additions to the template system in this version.
+
+### <z:write
+
+#### format 
+
+Use this to format a value (or multiple values). You can have multiple values by naming them value1, value2 etc.
+
+```
+<z:write format="{0:00}" value=1.029>
+## prints 1.03
+```
+
+#### transform
+
+Use this to transform the string to `uppercase`, `lowercase`, `ucfirst` or `ucwords`
+
+```
+<z:write value="this was lowercase" transform="ucwords">
+## prints This Was Lowercase
+```
+
+#### trim
+
+If set to "true" or "t" it will trim the output.
+
+### <z:prepare
+
+The prepare tag now supports pagesize so that pagination can be initialized without running `<z:foreach` over a dataclass.
+
+If the filter-attribute is provided but empty it will be skipped. This is convenient if a session variable might be set for filtering products.
+
+### <z:meta
+
+You can now use `<z:meta property="og:description">Open graph description</z:meta>` to set open graph meta tags. The meta tag now supports all values for name, and these will be set in the header.
+
+### <z:url
+
+The url tag is now using the IUrlProvider under the covers.
+
+### <z:include
+
+All parameters set on the include tag will be available or override the `$z:config[attr]` in the included template.
+
+```
+## template/module a:
+<z:include module="b" some_attr="test" />
+
+## template/module b:
+this will say "test": $z:config[some_attr]
+```
+
+In addition if you try to include a control that fails or does not exist it will return an error-box for administrator and empty for a user.
+
+### $z:plugin
+
+This allows access to installed plugins. Use `$z:plugin[name.enabled] eq "T"` to check if a plugin is installed. 
+
+Other properties will execute `T GetProperty(string name)` on the class inheriting from ZpiderPlugin.
+
+### $z:text
+
+The text entity will no longer return ?TXT_NAME? etc if a text is missing unless you are admin.
+
+### Support dataclass extended
+
+The support dataclass (`$z:value[support...]`) has been extended with the following values
+
+- ShowWindowRows
+- ShowWindowColumns
+- IntermediateGroupAdd
+- SubGroupAdd
+- CurrentCulture
+- CurrentCultureName
+- CurrentCulturePhoneCode
+- DirectOrder (Current user is guest and DirectOrder is enabled)
+- IsGuestUser
+- OpenWebshop
+- RawUrl (Current request RawUrl)
+
+HomePage now returns the HomePage relative to the application path.
+
+### HTX in general
+
+There's been some issues relating to nullvalues and exceptions, and these are taken care of.
+
+If you need to force credit card payment only you can set `OnlyCreditCardAsPayment` to `true` on the session-scope.
+
+```<z:set scope="session" name="OnlyCreditCardAsPayment">true</z:set>```
+
+## Plugins
+
+These are plugins that are available for Zpider. Most are paid and requires a license.
+
+- AgentLogin
+- API JwtAuthentication
+- API Swagger
+- [Clerk.io](https://clerk.io) - Powerful recommendations using AI
+- Google Tag Manager
+- Image Upload (drag'n'drop)
+- Punch Out (OCI)
+- Klarna Checkout (Payment)
+- Product Info editor
+- Search (Advanced search using Lucene.net)
+- Sitemap
+- [Sleeknote](https://sleeknote.com/start-free-trial?via=zpider)
+- Spellchecker (when searcing)
+- UnitSupport (For Visma Global)
+- UrlRewrite (New, fancy seo urls)
+- UrlRewriteClassic (Like the default in v10)
+
+## Hotfixes
+
+You can check what patch version you are running by logging in as administrator and checking in the upper right corner.
+
+| Date | Build | Description |
+| - | - | - |
+| 2020-05-04 | v12.0.417 | Fixed missing templates for `updatenewuser` and fixed issue with NordicCool when using ZpiderHeader. NordicCool and ResponsiveCool are now defined using theme.json. Minor fixes for plugins `Unit Support` and `Klarna Checkout`. |
+| 2020-04-30 | v12.0.411 | Initial release v12. |
+
+## Download
+
+[Zpider eShop v12.0](https://download.zpider.io/release/Zpider-v12.0.zip)
+
+## Thanks
+
+A huge thanks to [Markus at Tigerton AB](mailto:markus@tigerton.se) for helping out with the design. He can help you out if you need custom layout as well!

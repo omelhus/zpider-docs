@@ -1,0 +1,9 @@
+# Updating users in Zpider returns "Error saving user. 3"
+
+### Issue
+
+Zpider is returning `Error saving user. 3` when you change user details or password in User Administration.
+
+### Solution
+
+This is usually because the connection with the ERP database is broken. Try restarting the Zpider Fusion Service, and if that does not fix the issue referr to `debug.log` on the application server.
