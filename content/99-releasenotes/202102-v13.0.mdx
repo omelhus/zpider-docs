@@ -3,20 +3,58 @@ title: "Zpider eShop v13.0"
 metaTitle: "Release Notes - 13.0"
 metaDescription: "These are release notes for v13.0 of Zpider eShop"
 ---
-
+// Kom til 2020-10-15
 ## News
-
+- .Net Framework 4.8 is now required
+- All themes are now using theme.json to reference js and css
+- The upgrade process is vastly improved
+- New and updated web editor for themes and templates
+- Use eventlisteners to hook into events in Zpider and do things like validation
+- Check out as guest can now be enabled. Current guest user is then used to place the order in ERP.
+- Password hashing is now done using BCrypt. Existing users are converted upon login.
+- Database service to query the ERP database directly from Zpider. Can use htx function SqlQuery if enabled.
 
 ## Fixed issues
+ - Bug in plugin installer in chrome
+ - The upgrade process no longer overwrites database config files
+ - Duplicate emails 
+    - If a customer was unable to be exported to Zpider due to duplicate loginid they might end up in a loop getting an email with a new username and password every day. No more.
+ - During upgrade it would reset the client id in the configuration, and ruin any custom configuration to a copied client.
+ - The upgrade process timeout is increased 
+ - StockIncChanges can now be used in the shopping cart as well
+ - Importing customers can now be restricted to a set of import profiles. Useful if you are running multiple installtions on the same erp client.
+ - Email validation in admin is updated
+ - VAF logging is improved for Visma Global.
+ - NewUser: CompanyName is an alias for Name in order to avoid browser autocomplete and utilise Brønnøysund lookup.
+ - The length of zpiderorder.creditcardtransactionid is extended to 50
+ - Cache webuser and customer for reuse for guests. This has a huge impact for installations with alot of traffic.
+ - Lazy load server version and web server version instead of upon logon
 
 
 ## HTX templates
+ - HTX can now be extended with custom functions
 
+ - $z:value[support.rawurl] returns the current url
 
-## Plugins
+## New Plugins
+ - Zpider Cloud - Unleash the power of WordPress CMS in Zpider
+ - AXIA Frakt for tracking orders sent with AXIA Frakt
+ - Plankjøp with the option to exclude products
+ - Google Merchant Feed
+ - CreditSafe - Credit check customers when they register
+ - Nets Callback for allowing Nets to push completed orders to Zpider
+ - Matinfo - fetch product information from Matinfo using EPD or GTIN.
+ - Redirect - add redirects for old urls to new using urls, products or groups as references.
+ - Trustpilot
+ - SendMail - HTX plugin for sending emails from Zpider
+ - SqlQuery - HTX plugin for querying the ERP from Zpider
 
-
-## Hotfixes
+## Fixed Plugin issues
+ - Image Upload: Improved resize performance
+ - Image Upload: Set CDN settings globally for all product images
+ - Advanced search: Change to AND search
+ - Advanced search: Allow multi select of facets within same group
+ - Klarna Checkout: Allow multiple configurations for different webusers and allow switching between the webusers.
 
 
 ## Download
