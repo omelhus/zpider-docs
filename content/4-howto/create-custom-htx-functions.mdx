@@ -1,0 +1,174 @@
+---
+title: "Create a custom HTX function"
+---
+
+In order to create a custom HTX function you inherit the class `HtxExtension` and override the functions Execute and optionally ExecuteClose. 
+
+Execute and ExecuteClose is run on the same object, so it's safe to store values from Execute and use them in ExecuteClose.
+
+The content parameter passed to ExecuteClose is the parsed content from between the opening and the closing tag.
+
+The name of the function will be as defined in the HtxExtension-attribute placed on the class.
+
+See this example from the `<z:sendmail`-function:
+
+```csharp
+using System.Collections;
+using System.IO;
+using System.Net.Mail;
+using System.Text;
+using System.Web.Hosting;
+using Zpider.eShop.Web.Base;
+using Zpider.eShop.Web.Base.Plugins;
+using Zpider.Sys.Lib.Convert;
+using Zpider.Sys.Lib.Mail;
+using Zpider.Sys.Lib.Messaging;
+using Zpider.Sys.Lib.Template;
+
+namespace Plugin.SendMail
+{
+    [HtxExtension(Name = "SendMail")]
+    public class SendMailFunction : HtxExtension
+    {
+        public override bool IsClosingFunction => true;
+
+        public string Subject { get; set; }
+        public string To { get; set; }
+        public string From { get; set; }
+        public string FromName { get; private set; }
+        public bool PlainText { get; set; }
+        public string Attachments { get; set; }
+
+        public string ReplyTo { get; set; }
+
+        public override ProviderRetval Execute(IDictionary attributes, ScriptRunContext context)
+        {
+            Subject = attributes.Get<string>("subject");
+            To = attributes.Get<string>("to") ?? Domain.Configuration.GeneralConfiguration.SenderEmail;
+            From = attributes.Get<string>("from") ?? Domain.Configuration.GeneralConfiguration.SenderEmail;
+            FromName = attributes.Get<string>("fromname") ?? Domain.Configuration.GeneralConfiguration.SenderName;
+            PlainText = attributes.Get<bool>("plaintext");
+            Attachments = attributes.Get<string>("attachments");
+            ReplyTo = attributes.Get<string>("replyto");
+            return ProviderRetval.ContinuePage;
+        }
+
+        public override void ExecuteClose(string content, ClosingTagItem item, ScriptRunContext runContext)
+        {
+            var generalConfiguration = Domain.Configuration.GeneralConfiguration;
+            using (var message = new MailMessage
+            {
+                Subject = Subject,
+                SubjectEncoding = Encoding.Default,
+                Body = content,
+                BodyEncoding = Encoding.Default
+            })
+            {
+                AddRecipients(message);
+
+                message.IsBodyHtml = !PlainText;
+
+                message.From = !string.IsNullOrEmpty(From)
+                    ? new MailAddress(From, FromName ?? From, Encoding.Default)
+                    : new MailAddress(generalConfiguration.SenderEmail, generalConfiguration.SenderName);
+
+                if (!string.IsNullOrEmpty(ReplyTo))
+                {
+                    var reply_to = ReplyTo.Split(split_list);
+                    foreach (var s in reply_to)
+                    {
+                        if (!string.IsNullOrEmpty(s.Trim()))
+                            message.ReplyToList.Add(s.Trim());
+                    }
+                }
+
+                AddAttachmentsToMessage(message);
+
+                IMessageBody messageBody = new MessageBody
+                {
+                    ["Message"] = new SerializableMailMessage(message)
+                };
+                Domain.eShopClient.SendMessage(messageBody, "Fusion.Mail", "SendMail", null);
+            }
+        }
+
+        readonly char[] split_list = new[] { ',', ' ', ';' };
+
+        private void AddRecipients(MailMessage message)
+        {
+            var to = To.Split(split_list);
+            foreach (var s in to)
+            {
+                if (!string.IsNullOrEmpty(s.Trim()))
+                    message.To.Add(s.Trim());
+            }
+        }
+
+        private void AddAttachmentsToMessage(MailMessage message)
+        {
+            if (!string.IsNullOrEmpty(Attachments))
+            {
+                if (Attachments.IndexOf(';') > -1)
+                {
+                    foreach (var attachment in Attachments.Split(';'))
+                    {
+                        if (File.Exists(HostingEnvironment.MapPath(attachment)))
+                        {
+                            message.Attachments.Add(new Attachment(HostingEnvironment.MapPath(attachment)));
+                        }
+                        else if (File.Exists(attachment))
+                        {
+                            message.Attachments.Add(new Attachment(attachment));
+                        }
+                    }
+                }
+                else if (File.Exists(HostingEnvironment.MapPath(Attachments)))
+                {
+                    message.Attachments.Add(new Attachment(HostingEnvironment.MapPath(Attachments)));
+                }
+                else if (File.Exists(Attachments))
+                {
+                    message.Attachments.Add(new Attachment(Attachments));
+                }
+                else // Try to fetch the file from fusion
+                {
+                    var file = Utility.GetFile(FileServerType.Config, Attachments);
+                    if (!string.IsNullOrEmpty(file) &&
+                        File.Exists(HostingEnvironment.MapPath(file)))
+                    {
+                        message.Attachments.Add(new Attachment(file));
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+In addition you'll need a class inheriting from ZpiderPlugin to let Zpider know that there's a plugin in the DLL that needs to be loaded, and you'll need a description.json that tells Zpider what to load.
+
+SendMailPlugin.cs:
+```csharp
+using Zpider.eShop.Web.Base.Plugins;
+
+namespace Plugin.SendMail
+{
+    /// In this case it can just be empty
+    public class SendMailPlugin : ZpiderPlugin
+    {
+
+    }
+}
+```
+
+description.json:
+```json
+{
+  "Name": "SendMail",
+  "ShortName": "SendMail",
+  "Description": "HTX addon to send mail using <z:sendmail in HTX code.",
+  "Assembly": "Plugin.SendMail.dll"
+}
+```
+
+Wrap it in a folder and place it in the Plugins folder in Zpider. It should then show up in the plugin administration in the new admin after a restart.
