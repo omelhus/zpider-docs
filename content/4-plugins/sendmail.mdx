@@ -1,0 +1,60 @@
+---
+title: "SendMail"
+---
+
+Install plugin SendMail using the new admin.
+
+| Attribute  | Description | Note |
+| - | - | - |
+| subject | Subject | This is required |
+| to | Recipient | If not provided it will use the SenderEmail for the store |
+| from | Sender | If not provided it will use the SenderEmail for the store |
+| fromname | Sender Name | If not provided it will use the SenderName for the store |
+| plaintext | true/false if the email is plain text |  |
+| attachments | Files to send with the email | A comma separated list of attachments to add to the email. Location relative to the web server. |
+| replyto | Reply To |  |
+
+For To, ReplyTo and Attachments you can use ",", " " and ";" to set the field to a list of emails.
+
+## Example usage
+
+This example will send a copy of the mailorderhtml to someone.
+
+```
+<z:sendmail to="someone@on-it.no" subject="This is a copy of the confirmation">'
+Hey,
+
+Here's a copy of the order confirmation.
+
+<z:include module="MAILORDERHTML">
+</z:sendmail>
+```
+
+## Another example
+
+This is typically added to updatenewuser to send an email to the back office when a new customer is registered in the shop.
+
+Since `to` is not defined here it will send the email to the configured SenderEmail in Zpider.
+
+```
+<z:set scope="page" name="mail_subject">[NY KUNDE] $z:value[newuser.name] ($z:value[newuser.companynumber])</z:set>
+<z:sendmail subject=$z:get[page.mail_subject] plaintext="true">
+Hei,
+
+$z:value[newuser.name] har akkurat registrert seg i butikken.
+
+$z:value[newuser.name]
+$z:value[newuser.address1]
+$z:value[newuser.address2]
+$z:value[newuser.zipcode] $z:value[newuser.place]
+
+Organisasjonsnummer: $z:value[newuser.companynumber]
+Telefon: $z:value[newuser.phone]
+
+Regnskapstall: https://www.regnskapstall.no/?query=$z:value[newuser.companynumber].
+Brønnøysund: https://w2.brreg.no/enhet/sok/detalj.jsp?orgnr=$z:value[newuser.companynumber].
+Google Maps: https://www.google.com/maps/search/?api=1&query=<z:esc mode="url" value=$z:value[newuser.address1]>,%20<z:esc mode="url" value=$z:value[newuser.zipcode]>%20<z:esc mode="url" value=$z:value[newuser.place]>.
+
+- Zpider eShop
+</z:sendmail>
+```
