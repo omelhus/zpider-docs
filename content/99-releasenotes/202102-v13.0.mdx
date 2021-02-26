@@ -6,40 +6,39 @@ metaDescription: "These are release notes for v13.0 of Zpider eShop"
 
 ## News
 - .Net Framework 4.8 is now required
-- All themes are now using theme.json to reference js and css
+- All themes are now using theme.json to reference js and CSS
 - The upgrade process is vastly improved
 - Updated preview admin with dashboard and general configuration.
 - New and updated web editor for themes and templates
-- Use eventlisteners to hook into events in Zpider and do things like validation
-- Check out as guest can now be enabled. Current guest user is then used to place the order in ERP.
+- Use event listeners to hook into events in Zpider and do things like validation
+- Check out as guests can now be enabled. The current guest user is then used to place the order in ERP.
 - Password hashing is now done using BCrypt. Existing users are converted upon login.
-- Database service to query the ERP database directly from Zpider. Can use htx function SqlQuery if enabled.
-- Unit convertion can now be enabled (using QuantityPerUnitSale for Visma Global)
+- Database service to query the ERP database directly from Zpider. Can use HTX function SqlQuery if enabled.
+- Unit conversion can now be enabled (using QuantityPerUnitSale for Visma Global)
 
 ## Fixed issues
  - Bug in plugin installer in chrome
  - The upgrade process no longer overwrites database config files
- - Duplicate emails 
-    - If a customer was unable to be exported to Zpider due to duplicate loginid they might end up in a loop getting an email with a new username and password every day. No more.
- - During upgrade it would reset the client id in the configuration, and ruin any custom configuration to a copied client.
+ - During the upgrade it would reset the client id in the configuration, and ruin any custom configuration to a copied client.
  - The upgrade process timeout is increased 
+ - If a customer was unable to be exported to Zpider due to a duplicate login id they might end up in a loop getting an email with a new username and password every day. No more.
  - StockIncChanges can now be used in the shopping cart as well
- - Importing customers can now be restricted to a set of import profiles. Useful if you are running multiple installtions on the same erp client.
+ - Importing customers can now be restricted to a set of import profiles. Useful if you are running multiple installations on the same ERP client.
  - Email validation in admin is updated
  - VAF logging is improved for Visma Global.
- - NewUser: CompanyName is an alias for Name in order to avoid browser autocomplete and utilise Brønnøysund lookup.
- - The length of zpiderorder.creditcardtransactionid is extended to 50
- - Cache webuser and customer for reuse for guests. This has a huge impact for installations with alot of traffic.
+ - On WebUser the CompanyName is now an alias for Name to avoid browser autocomplete and utilize Brønnøysund lookup.
+ - The length of ZpiderOrder.CreditCardTransactionId is extended to 50
+ - Cache web user and customer for reuse for guests. This has a huge impact on installations with a lot of traffic.
  - Lazy load server version and web server version instead of upon logon
- - Correcly dispose sql connections
+ - Correctly dispose of SQL connections
  - An XSS issue is fixed
  - The PersistentCache is rewritten to be more performant
  - Show window would break if a group contained an invalid character
  - Each Zpider application will now get a numbered application pool name
- - Values on customer, orders etc can now be set to 0 if needed.
- - DefaultUriProvider now handles only having the gid passed to it. This means that <z:url gid=[groupnumber]/> now works correclty without adding a plugin.
- - The timeout in forgottenpassword is increased from 3 to 30 seconds.
- - Cultures in emails are now validated so that only activated cultures are used for new user during import.
+ - Values on a customer, orders, etc can now be set to 0 if needed.
+ - DefaultUriProvider now handles only having the gid passed to it. This means that <z:url gid=[groupnumber]/> now works correctly without adding a plugin.
+ - The timeout in forgotten password is increased from 3 to 30 seconds.
+ - Cultures in emails are now validated so that only activated cultures are used for a new user during import.
 
 ## HTX templates
  - HTX can now be extended with custom functions
@@ -54,7 +53,7 @@ metaDescription: "These are release notes for v13.0 of Zpider eShop"
  - CreditSafe - Credit check customers when they register
  - Nets Callback for allowing Nets to push completed orders to Zpider
  - Matinfo - fetch product information from Matinfo using EPD or GTIN.
- - Redirect - add redirects for old urls to new using urls, products or groups as references.
+ - Redirect - add redirects for old URLs to new ones using URLs, products, or groups as references.
  - Trustpilot
  - SendMail - HTX plugin for sending emails from Zpider
  - SqlQuery - HTX plugin for querying the ERP from Zpider
@@ -63,11 +62,10 @@ metaDescription: "These are release notes for v13.0 of Zpider eShop"
  - Image Upload: Improved resize performance
  - Image Upload: Set CDN settings globally for all product images
  - Advanced search: Change to AND search
- - Advanced search: Allow multi select of facets within same group
+ - Advanced search: Allow multi-select of facets within the same group
  - Advanced search: Now falls back to ordinary search and product list if Lucene is not done with the initial indexing yet.
- - Klarna Checkout: Allow multiple configurations for different webusers and allow switching between the webusers.
+ - Klarna Checkout: Allow multiple configurations for different web users and allow switching between the web users.
  - Google Tag Manager: Now reporting total prices inc. vat.
-
 
 ## Download
 
