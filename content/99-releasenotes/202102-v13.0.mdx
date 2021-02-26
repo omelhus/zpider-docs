@@ -15,9 +15,9 @@ metaDescription: "These are release notes for v13.0 of Zpider eShop"
 - Password hashing is now done using BCrypt. Existing users are converted upon login.
 - Database service to query the ERP database directly from Zpider. Can use HTX function SqlQuery if enabled.
 - Unit conversion can now be enabled (using QuantityPerUnitSale for Visma Global)
+- Guest User Cache - The guest user and customer can be reused as read-only for all guests. This has a huge impact on installations with a lot of traffic as Zpider will effectively stop crashing.
 
 ## Fixed issues
- - Bug in plugin installer in chrome
  - The upgrade process no longer overwrites database config files
  - During the upgrade it would reset the client id in the configuration, and ruin any custom configuration to a copied client.
  - The upgrade process timeout is increased 
@@ -28,7 +28,6 @@ metaDescription: "These are release notes for v13.0 of Zpider eShop"
  - VAF logging is improved for Visma Global.
  - On WebUser the CompanyName is now an alias for Name to avoid browser autocomplete and utilize Brønnøysund lookup.
  - The length of ZpiderOrder.CreditCardTransactionId is extended to 50
- - Cache web user and customer for reuse for guests. This has a huge impact on installations with a lot of traffic.
  - Lazy load server version and web server version instead of upon logon
  - Correctly dispose of SQL connections
  - An XSS issue is fixed
@@ -39,6 +38,7 @@ metaDescription: "These are release notes for v13.0 of Zpider eShop"
  - DefaultUriProvider now handles only having the gid passed to it. This means that <z:url gid=[groupnumber]/> now works correctly without adding a plugin.
  - The timeout in forgotten password is increased from 3 to 30 seconds.
  - Cultures in emails are now validated so that only activated cultures are used for a new user during import.
+ - Bug in plugin installer in chrome
 
 ## HTX templates
  - HTX can now be extended with custom functions
