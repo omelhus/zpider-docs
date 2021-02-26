@@ -3,16 +3,18 @@ title: "Zpider eShop v13.0"
 metaTitle: "Release Notes - 13.0"
 metaDescription: "These are release notes for v13.0 of Zpider eShop"
 ---
-// Kom til 2020-10-15
+
 ## News
 - .Net Framework 4.8 is now required
 - All themes are now using theme.json to reference js and css
 - The upgrade process is vastly improved
+- Updated preview admin with dashboard and general configuration.
 - New and updated web editor for themes and templates
 - Use eventlisteners to hook into events in Zpider and do things like validation
 - Check out as guest can now be enabled. Current guest user is then used to place the order in ERP.
 - Password hashing is now done using BCrypt. Existing users are converted upon login.
 - Database service to query the ERP database directly from Zpider. Can use htx function SqlQuery if enabled.
+- Unit convertion can now be enabled (using QuantityPerUnitSale for Visma Global)
 
 ## Fixed issues
  - Bug in plugin installer in chrome
@@ -29,7 +31,15 @@ metaDescription: "These are release notes for v13.0 of Zpider eShop"
  - The length of zpiderorder.creditcardtransactionid is extended to 50
  - Cache webuser and customer for reuse for guests. This has a huge impact for installations with alot of traffic.
  - Lazy load server version and web server version instead of upon logon
-
+ - Correcly dispose sql connections
+ - An XSS issue is fixed
+ - The PersistentCache is rewritten to be more performant
+ - Show window would break if a group contained an invalid character
+ - Each Zpider application will now get a numbered application pool name
+ - Values on customer, orders etc can now be set to 0 if needed.
+ - DefaultUriProvider now handles only having the gid passed to it. This means that <z:url gid=[groupnumber]/> now works correclty without adding a plugin.
+ - The timeout in forgottenpassword is increased from 3 to 30 seconds.
+ - Cultures in emails are now validated so that only activated cultures are used for new user during import.
 
 ## HTX templates
  - HTX can now be extended with custom functions
@@ -54,7 +64,9 @@ metaDescription: "These are release notes for v13.0 of Zpider eShop"
  - Image Upload: Set CDN settings globally for all product images
  - Advanced search: Change to AND search
  - Advanced search: Allow multi select of facets within same group
+ - Advanced search: Now falls back to ordinary search and product list if Lucene is not done with the initial indexing yet.
  - Klarna Checkout: Allow multiple configurations for different webusers and allow switching between the webusers.
+ - Google Tag Manager: Now reporting total prices inc. vat.
 
 
 ## Download
