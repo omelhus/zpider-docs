@@ -1,0 +1,142 @@
+---
+title: "Create event listeners"
+---
+
+All event listeners will inherit from IEventListener&lt;T&gt; where T is a Zpider event.
+
+## Available events
+
+All events are in the namespace `Zpider.eShop.Web.Base.Plugins.Events`
+
+| Name  | Description |
+| - | - |
+| AddToCartBeforeSaveEvent | Fired when an item is added to the cart, but before the cart i saved |
+| AddToCartEvent | Fired after an item is added to the cart |
+| ClearCacheEvent | Fired when an admin clicks "Clear cache" |
+| LogonUserEvent | Fired when a user (or guest) is logged on |
+| NewUserBeforeSaveEvent | Fired before a new user is saved |
+| NewUserEvent | Fired when a new user is created |
+| OrderStep1Event | Fired in orderstep1 |
+| OrderStep2Event | Fired in orderstep2 |
+| PageLoadEvent | Fired for each page load |
+| PlaceOrderBeforeSaveEvent | Fired before an order is placed  |
+| PlaceOrderEvent | Fired after an order is placed |
+
+## Example
+
+This is the code behind the Trustpilot integration in Zpider. In this example we are listening for both the PageLoadEvent in order to inject a trustbox using the PageBuilderService and a PlaceOrderEvent to pass a copy of the order to Trustpilot so that they can send an invitation when the order is ready.
+
+```csharp
+using Newtonsoft.Json;
+using System;
+using System.Threading.Tasks;
+using System.Web;
+using Zpider.eShop.Lib;
+using Zpider.eShop.Lib.Configuration;
+using Zpider.eShop.Web.Base;
+using Zpider.eShop.Web.Base.Plugins;
+using Zpider.eShop.Web.Base.Plugins.Events;
+using Zpider.eShop.Web.Base.Plugins.Providers;
+using Zpider.eShop.Web.Base.Services;
+using Zpider.eShop.Web.Config;
+
+namespace Plugin.Trustpilot
+{
+    public class TrustpilotPlugin : ZpiderPlugin
+    {
+        private readonly Func<IPluginInstaller> installer;
+        public const string IntegrationKey = nameof(IntegrationKey);
+        public const string TrustBox = nameof(TrustBox);
+        public TrustpilotPlugin(Func<IPluginInstaller> installer)
+        {
+            this.installer = installer;
+        }
+        public override Task Install()
+        {
+            installer().Module("TRUSTPILOT", module =>
+            {
+                module.SetProperty(IntegrationKey, "");
+                module.SetProperty(TrustBox, module.GetProperty<bool>(TrustBox, true));
+            }
+            ).Commit();
+            return base.Install();
+        }
+    }
+
+    public class TrustpilotPageloadListener : IEventListener<PageLoadEvent>
+    {
+        public int Priority => 0;
+
+        public IPageBuilderService PageBuilderService { get; }
+
+        public TrustpilotPageloadListener(IPageBuilderService pageBuilderService)
+        {
+            PageBuilderService = pageBuilderService;
+        }
+
+        public void Handle(PageLoadEvent zpiderEvent)
+        {
+            var module = Domain.Configuration.Modules["TRUSTPILOT"] as Module;
+            if (module?.GetProperty<bool>("TrustBox") == true)
+                PageBuilderService.AppendHeadContent(@"<!-- TrustBox script --><script type='text/javascript' src='//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js' async></script><!--End TrustBox script-->");
+            if (!string.IsNullOrEmpty(module?.GetProperty<string>(TrustpilotPlugin.IntegrationKey)))
+            {
+                PageBuilderService.AppendHeadContent($@"<script>
+        (function(w,d,s,r,n){{w.TrustpilotObject = n;w[n]=w[n]||function(){{(w[n].q=w[n].q||[]).push(arguments)}};
+            a=d.createElement(s);a.async=1;a.src=r;a.type='text/java'+s;f=d.getElementsByTagName(s)[0];
+            f.parentNode.insertBefore(a,f)}})(window,document,'script', 'https://invitejs.trustpilot.com/tp.min.js', 'tp');
+            tp('register', '{module.GetProperty<string>(TrustpilotPlugin.IntegrationKey)}');</script>");
+            }
+        }
+    }
+
+    public class TrustpilotOrderListener : IEventListener<PlaceOrderEvent>
+    {
+        public int Priority => 0;
+
+        public IPageBuilderService PageBuilderService { get; }
+
+        public TrustpilotOrderListener(IPageBuilderService pageBuilderService)
+        {
+            PageBuilderService = pageBuilderService;
+        }
+
+        public void Handle(PlaceOrderEvent zpiderEvent)
+        {
+            var order = zpiderEvent.ZpiderOrder as ZpiderOrderDataClass;
+            var lines = order.ZpiderOrderLine;
+            var invitation = new TrustpilotInvitation
+            {
+                recipientEmail = order.bdGetString((int)ZpiderOrderFields.Email),
+                recipientName = order.bdGetString((int)ZpiderOrderFields.Name),
+                referenceId = $"ORDER{order.bdGetString((int)ZpiderOrderFields.ZpiderOrderNo)}",
+                source = "InvitationScript"
+            };
+            using (var art = Domain.MainClass.CreateDataClass("article") as BaseTableDataClass)
+            {
+                foreach (ZpiderOrderLineDataClass line in lines)
+                {
+                    art.bdSetFilterCondition(ArticleFields.Number, line.bdGetString((int)ZpiderOrderLineFields.ArticleNumber));
+                    if (art.bdRequeryFilterCondition() == ErrorCodes.None && art.bdFetchFirst() == ErrorCodes.None)
+                    {
+                        var item = new Product
+                        {
+                            name = line.bdGetString((int)ZpiderOrderLineFields.Name),
+                            sku = line.bdGetString((int)ZpiderOrderLineFields.ArticleNumber),
+                            imageUrl = $"https://{HttpContext.Current.Request.Url.Host}/ErpImages/{line.bdGetString((int)ZpiderOrderLineFields.ArticleNumber)}",
+                            productUrl = $"https://{HttpContext.Current.Request.Url.Host}{Domain.Resolve<IUrlProvider>().GetUri(line.bdGetString((int)ZpiderOrderLineFields.ArticleNumber), line.bdGetString((int)ZpiderOrderLineFields.Name), art.bdGetInt((int)ArticleFields.GroupNumber), "product")}"
+                        };
+                        invitation.products.Add(item);
+                    }
+                }
+            }
+            PageBuilderService.AppendFootContent(@"
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    if(tp) tp('createInvitation', " + JsonConvert.SerializeObject(invitation) + @");
+	});
+</script>");
+        }
+    }
+}
+```
