@@ -1,0 +1,74 @@
+---
+title: "Show additional data from ERP"
+metaTitle: "Show additional data from ERP"
+---
+    SELECT 
+        ord.R1, ord.R2, ord.R3, ord.R4, ord.R5, ord.R6, ord.R7, ord.R8, ord.R9, ord.R10, ord.R11, ord.R12,
+        ord.Ad1, ord.Ad2, ord.Ad3, ord.Ad4, ord.InqNo, ord.ArDt, ord.EmpNo, ord.EmpPrGr, ord.Rsp, ord.NoUn,
+        ord.Area, ord.DtyFrAm, ord.DDtyFrAm, ord.Trunc, ord.DTrunc, ord.LstSetDt, ord.DifProd, ord.CfCnt,
+        ord.CfDelDt, ord.PurcNo, ord.PurcCnt, ord.RmtSup, ord.GWgtCoSF, ord.GWgtTot, ord.ExPr, ord.EDISt, 
+        ord.ExSpc, ord.YrRef, ord.FactNo, ord.InvoSF, ord.InvoAm, ord.InvoIF, ord.DInvoIF, ord.InvoPl,
+        ord.InvoNo, ord.LstInvDt, ord.InvoRef, ord.InvoCnt, ord.InvoCust, ord.OvCNOSm, ord.FrAm, ord.FrAm2,
+        ord.FrAm3, ord.FrAm4, ord.FrCusPro, ord.ConNo, ord.ConCnt, ord.Free1, ord.Free2, ord.Free3, ord.Free4,
+        ord.FinBy, ord.FinWgt, ord.FinDt, ord.SPrAdd, ord.PacNo, ord.PacCnt, ord.DueDt, ord.InqCnt, ord.ConsNo,
+        ord.ERetDt, ord.Gr, ord.Gr2, ord.Gr3, ord.Gr4, ord.Gr5, ord.Gr6, ord.Gr7, ord.Gr8, ord.Gr9, ord.Gr10,
+        ord.Gr11, ord.Gr12, ord.MainOrd, ord.IgnTest, ord.OrdBasNo, ord.PropPrc, ord.PropNo, ord.Package,
+        ord.[LiaActNo], ord.[LiaAct2], ord.AcSet, ord.CtrAm, ord.DCtrAm, ord.CstExRt, ord.CstCur, ord.CustNo,
+        ord.CustPrGr, ord.CustPrG2, ord.CustPrG3, ord.FrStc, ord.Ctry, ord.SupNo, ord.DelPri, ord.DelMt,
+        ord.DelTrm, ord.DelAd1, ord.DelAd2, ord.DelAd3, ord.DelAd4, ord.DelActNo, ord.DelCtry, ord.DelNm,
+        ord.DelPArea, ord.DelPNo, ord.DelLang, ord.Lgt, ord.WageRtNo, ord.NoteNm, ord.VatAm, ord.DVatAm,
+        ord.ObVatNo, ord.Label, ord.Nm, ord.NWgt, ord.OfNo, ord.OfCnt, ord.ExVat, ord.CfNo, ord.OrdDt,
+        ord.OrdNo, ord.CSOrdNo, ord.OrdPref, ord.OrdPrGr, ord.OrdBal, ord.DOrdBal, ord.OrdPrSt, ord.OrdPrSt2,
+        ord.NOrdSum, ord.DNOrdSum, ord.OrdTp, ord.DepDt, ord.PicNo, ord.PicCnt, ord.PArea, ord.PNo, ord.PrSup,
+        ord.SaleCstP, ord.ProdNo, ord.ProdCnt, ord.ReqNo, ord.SpcTxAm, ord.DSpcTxAm, ord.Lang, ord.OrdSumT,
+        ord.DOrdSumT, ord.SelBuy, ord.DocSMt, ord.DocSMt2, ord.RlDelDt, ord.Tare, ord.TestRes, ord.TotDcP,
+        ord.TotDcAm, ord.TotDcDAm, ord.TransGr, ord.TransGr2, ord.TransGr3, ord.TransGr4, ord.TrTp, 
+        ord.TspAgrNo, ord.PstAm, ord.CIncCst, ord.IncCst, ord.CIncSF, ord.IncSF, ord.CIncIF, ord.IncIF,
+        ord.Inf, ord.Inf2, ord.Inf3, ord.Inf4, ord.Inf5, ord.Inf6, ord.CreUsr, ord.CreDt, ord.CreTm, 
+        ord.FCfDelDt, ord.ExRt, ord.Cur, ord.WebPg, ord.VoSr, ord.TonRt, ord.Vol, ord.OurRef, ord.DelDt,
+        ord.ToStc, ord.ExOrdPrc, ord.NordSum+ord.Vatam [TotalGrossPrice], Cur.ISO as [CurISO],
+        OrdActor.Phone CUSTPHONE, OrdActor.MailAd CUSTEMAILADDRESS, 
+        OrdInvoice.Nm INVNAME, OrdInvoice.Ad1 INVAD1, OrdInvoice.Ad2 INVAD2, OrdInvoice.Ad3 INVAD3, 
+        OrdInvoice.Ad4 INVAD4,  OrdInvoice.Pno INVZIPCODE, OrdInvoice.PArea INVCITY, OrdInvoice.Ctry INVCOUNTRY,
+        OrdInvoice.Phone INVPHONE, OrdInvoice.MailAd INVEMAILADDRESS, OrdInvoice.Fax INVFAX,
+        OrdDelivery.Phone DELPHONE, OrdDelivery.MailAd DELEMAILADDRESS, OrdDelivery.Fax DELFAX,
+        OrdDelTrmTxt.txt DELIVERYTERMTEXT, OrdDelMtTxt.txt DELIVERYMETHODTEXT, 
+        PmtMt.Descr PAYMENTMETHODTEXT, PmtTrm.Descr PAYMENTTERMTEXT, Stc.Nm WAREHOUSENAME,
+        Emp.Nm EmpName, emp.Phone EmpPhone, emp.MailAd EmpMail,
+        Invoices.Data Pdf,
+        OrdConf.Data OrdConfPdf,
+        Consign.Data ConsignPdf            
+        FROM Ord
+            LEFT OUTER JOIN Cur                 ON Cur.CurNo = Ord.Cur 
+            LEFT OUTER JOIN CustV OrdActor      ON OrdActor.CustNo = Ord.CustNo
+            LEFT OUTER JOIN CustV OrdInvoice    ON OrdInvoice.CustNo = Ord.InvoCust
+            LEFT OUTER JOIN CustV OrdDelivery   ON OrdDelivery.ActNo = Ord.DelActNo
+            LEFT OUTER JOIN Txt OrdDelTrmTxt    ON OrdDelTrmTxt.TxtTp = 4 AND OrdDelTrmTxt.TxtNO = Ord.DelTrm AND OrdDelTrmTxt.Lang = 47
+            LEFT OUTER JOIN Txt OrdDelMtTxt     ON OrdDelMtTxt.TxtTp = 5 AND OrdDelMtTxt.TxtNO = Ord.DelMt AND OrdDelMtTxt.Lang = 47
+            LEFT OUTER JOIN PmtMt               ON PmtMt.PmtMtNo = Ord.PmtMt
+            LEFT OUTER JOIN PmtTrm              ON PmtTrm.PmtTrmNo = Ord.PmtTrm
+            LEFT OUTER JOIN Stc                 ON Stc.StcNo = Ord.FrStc
+            LEFT OUTER JOIN EmpV Emp on Ord.EmpNo > 0 and Ord.EmpNo = Emp.EmpNo
+            OUTER APPLY (SELECT (SELECT Invoice.invono '@InvoNo', 
+                            FrmData.PDFPath + '\' + DB_NAME() + '\FaxMail\Invoice\' + CONVERT(nvarchar(max), Invoice.invono) + '.pdf' '@Pdf',
+                            CASE WHEN Invoice.NOrdSum > 0 THEN 'Faktura' ELSE 'Kreditnota' END '@DocType'
+                        FROM OrdDoc Invoice
+                        CROSS JOIN FrmData
+                        WHERE Invoice.OrdNo = Ord.OrdNo and DocTp = 1 FOR XML PATH('Invoice'), ROOT('Invoices')) Data
+                        )Invoices
+		 OUTER APPLY (SELECT (SELECT OrdConf.cfcnt '@InvoNo',
+						FrmData.PDFPath + '\' + DB_NAME() + '\FaxMail\OrderConf\' + CONVERT(nvarchar(max), OrdConf.CfNo) + '.pdf' '@Pdf',
+						'Ordrebekreftelse' as '@DocType'
+					FROM OrdDoc OrdConf
+					CROSS JOIN FrmData
+					WHERE OrdConf.OrdNo = Ord.OrdNo and DocTp = 5
+					FOR XML PATH('Invoice'), ROOT('Invoices'))Data)OrdConf
+		 OUTER APPLY (SELECT (SELECT OrdConf.pacno '@InvoNo',
+						FrmData.PDFPath + '\' + DB_NAME() + '\FaxMail\Consign\' + CONVERT(nvarchar(max), OrdConf.pacno) + '.pdf' '@Pdf',
+						'Pakkseddel' as '@DocType'
+					FROM OrdDoc OrdConf
+					CROSS JOIN FrmData
+					WHERE OrdConf.OrdNo = Ord.OrdNo and DocTp = 3
+					FOR XML PATH('Invoice'), ROOT('Invoices'))Data)Consign
+               WHERE Ord.InvoCust > 0
+```
