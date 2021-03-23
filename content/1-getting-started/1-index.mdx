@@ -45,8 +45,6 @@ Many SMTP servers are configured to successfully deliver email internally but no
 
 The SMTP configuration is stored in `FusionServer.config`. If you need to set a username and password for your SMTP connection, have a look at this example.
 
-If you are using Office 365 you should register on https://sendgrid.com/ and use their SMTP api.
-
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <FusionConfiguration>
@@ -56,6 +54,23 @@ If you are using Office 365 you should register on https://sendgrid.com/ and use
   <MailServerPort>587</MailServerPort>
   <MailServerUserName>username</MailServerUserName>
   <MailServerUserPassword>password</MailServerUserPassword>
+</FusionConfiguration>
+```
+
+**Office365**
+
+Remember that the sender email must be the same as the MailServerUserName.
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<FusionConfiguration>
+  <SessionTimeout>60</SessionTimeout>
+  <Port>6792</Port>
+  <MailServer>smtp.office365.com</MailServer>
+  <MailServerPort>587</MailServerPort>
+  <MailServerUserName>user@domain.com</MailServerUserName>
+  <MailServerUserPassword>P@assw0rd!</MailServerUserPassword>
+  <MailServerEnableSsl>true</MailServerEnableSsl>
 </FusionConfiguration>
 ```
 

@@ -1,0 +1,26 @@
+---
+title: "Show subgroups in article list"
+---
+
+```
+  <z:prepare alias="subgroup" dataclass="maingroup" scope="page" sortorder="{group.sortorder} asc, {group.name} asc" ParentNumber=$z:get[request.gid]>
+	<z:if $z:iteration[subgroup.count] gt 0>
+        <z:foreach alias="subgroup" maxrows=200>
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+                <div class="thumbnail">
+                    <a href="<z:url gid=$z:value[subgroup.number]>" alt="<z:esc mode=html value=$z:value[subgroup.name]>" title="<z:esc mode=html value=$z:value[subgroup.name]>">
+                        <z:set scope="page" name="subgroupimg">group-$z:value[subgroup.number]</z:set>
+                        <z:include control=$z:plugin[imageupload.image] Picture=$z:get[page.subgroupimg] Path="ErpImages/fff/{0}/{1}" width=400 height=240 alt=$z:value[subgroup.name]>
+                    </a>
+                    <div class="caption pb-3">
+                        <h4 class="text-overflow text-center">
+                            <a href="<z:url gid=$z:value[subgroup.number]>">
+                            <z:esc mode="html" value=$z:value[subgroup.name]>
+                            </a>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </z:foreach>
+	</z:if>
+```
