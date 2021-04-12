@@ -1,0 +1,72 @@
+---
+title: "Add ld+json and graph data"
+metaTitle: "Add ld+json and graph data"
+---
+
+article htx:
+```
+<z:meta name="head">
+  <link rel="canonical" href="https://site-domain.no<z:url number=$z:value[art.number] name=$z:value[art.name] gid=$z:value[art.groupnumber]>" />
+  <meta property="og:type" content="product" />
+  <meta property="og:price:amount" content="$z:value[art.customergrossprice]" />
+  <meta property="og:price:currency" content="NOK" />
+  <meta property="og:url" content="https://site-domain.no<z:url number=$z:value[art.number] name=$z:value[art.name] gid=$z:value[art.groupnumber]>" />
+  
+  <meta name="twitter:card" content="product" />
+  <meta name="twitter:title" content="<z:esc mode=js value=$z:value[art.name]>" />
+  <meta name="twitter:description" content="<z:text path=$z:value[support.erpfilepath] dir="Memo" name=$z:value[article.notefile] transform="striphtml" location="config">" />
+  <meta name="twitter:image" content="https://site-domain.no/ErpImages/512/$z:value[art.number]" />
+  <meta name="twitter:label1" content="PRICE" />
+  <meta name="twitter:data1" content="<z:write value=0+$z:value[art.customergrossprice] format="kr{0:c}">" />
+  <z:if $z:value[art.produsent] ne "">
+      <meta name="twitter:label2" content="VENDOR" />
+      <meta name="twitter:data2" content="<z:esc mode=js value=$z:value[art.produsent]>" />
+  </z:if>
+
+    <script type="application/ld+json">
+    [
+      {
+        "@context": "http://schema.org/",
+        "@type": "Product",
+        "name": "<z:esc mode="js" value=$z:value[art.name]>",
+        "image": "https://site-domain.no/ErpImages/$z:value[art.number]",
+        "description": "<z:text path=$z:value[support.erpfilepath] dir="Memo" name=$z:value[article.notefile] transform="striphtml" location="config">",
+        "sku": "<z:esc mode="js" value=$z:value[art.number]>",
+        "offers": {
+            "@type": "Offer",
+            "priceCurrency": "NOK",
+            "price": "$z:value[art.customergrossprice]",
+            "itemCondition": "https://schema.org/NewCondition",
+            "availability": "<z:if $z:value[article.availableinstoc] gt 0.0>http://schema.org/InStock<z:else>http://schema.org/OutOfStock</z:if>",
+            "url": "https://site-domain.no<z:url number=$z:value[art.number] name=$z:value[art.name] gid=$z:value[art.groupnumber]>"
+        },
+        "gtin13": "$z:value[art.eanno]",
+        "brand": "$z:value[art.brand]"
+    },
+    {
+          "@context": "https://schema.org",
+          "@type":"BreadcrumbList",
+          "@id":"#breadcrumb",
+          "itemListElement":[
+             {"@type":"ListItem","position":1, "item":{"@type":"WebPage","@id":"https://site-domain.no/","url":"https://site-domain.no/","name":"<z:esc mode=js value=$z:text[TXT_ZPIDER_TITLE]>"}},
+             <z:foreach alias="group" scope="page" pagesize="20">
+               {"@type":"ListItem","position":<z:write value=2+$z:iteration[group.current]>, "item":{"@type":"WebPage","@id":"https://site-domain.no<z:url gid=$z:value[group.number]>","url":"https://site-domain.no<z:url gid=$z:value[group.number]>","name":"<z:esc mode=js value=$z:value[group.name]>"}},
+               </z:foreach>
+            {"@type":"ListItem","position":<z:write value=3+$z:iteration[group.current]>, "item":{"@type":"WebPage","@id":"https://site-domain.no<z:url number=$z:value[art.number] name=$z:value[art.name] gid=$z:value[art.groupnumber]>","url":"https://site-domain.no<z:url number=$z:value[art.number] name=$z:value[art.name] gid=$z:value[art.groupnumber]>","name":"<z:esc mode=js value=$z:value[art.name]>"}}
+               ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "<z:esc mode="js" value=$z:text[TXT_ZPIDER_TITLE]>",
+      "url": "https://site-domain.no/",
+      "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://site-domain.no/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+      }
+    ]
+    </script>
+</z:meta>
+```
