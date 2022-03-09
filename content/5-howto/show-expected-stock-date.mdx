@@ -1,0 +1,22 @@
+---
+title: "Add expected delivery date to articles"
+---
+
+# Visma Business
+
+```sql
+SELECT ...
+    deltmb.deldt ExpectedDeliveryDate,
+    deltmb.inpurc ExpectedDeliveryQuantity
+FROM Prod
+...
+OUTER APPLY (
+	SELECT TOP 1 convert(VARCHAR(max), dbo.GetDateO(deldt, 0), 105) deldt
+		,inpurc
+	FROM DelTmBal d
+	CROSS JOIN GetDateHelper
+	WHERE d.ProdNo = prod.prodno
+		AND dbo.GetDateO(DelDt, 0) > GetDateHelper.NowDate
+	ORDER BY deldt ASC
+	) deltmb
+```
