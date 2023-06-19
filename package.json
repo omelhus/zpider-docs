@@ -33,7 +33,7 @@
     "gatsby-transformer-remark": "2.16.1",
     "get-youtube-id": "1.0.1",
     "graphql": "14.7.0",
-    "is-absolute-url": "2.1.0",
+    "is-absolute-url": "4.0.1",
     "lodash.flatten": "4.4.0",
     "lodash.startcase": "4.4.0",
     "react": "16.14.0",
